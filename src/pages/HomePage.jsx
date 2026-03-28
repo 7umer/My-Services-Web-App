@@ -9,12 +9,44 @@ import { FEATURES } from "../constants/features";
 
 
 export default function HomePage() {
+
+  const useCounter = (end, duration = 2000) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const increment = end / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [end, duration]);
+
+  return count;
+};
+
+
+
+
   const navigate = useNavigate();
   useFadeUp();
 
  
   
   const [isIndia, setIsIndia] = useState(true);
+
+  const projects = useCounter(10);
+  const tech = useCounter(5);
+  const focus = useCounter(100);
+
   useEffect(() => {
     fetch("https://ipapi.co/json/")
     .then(res => res.json())
@@ -23,6 +55,12 @@ export default function HomePage() {
     })
     .catch(() => setIsIndia(true));
   }, []);
+
+
+  
+
+
+
   return (
     <div>
       {/* ── HERO ── */}
@@ -39,10 +77,12 @@ export default function HomePage() {
               <div className="hero-badge fade-up">
                 <span /> Available for new projects
               </div>
-              <h1 className="font-display fade-up" style={{ fontSize: "clamp(25px,3vw,50px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24 }}>
-                We Build Websites,<br />
-                <span className="grad-text">Web Apps & SaaS Products That Actually</span><br />
-                Get You Clients
+              <h1 className="font-display slide-left delay-1" style={{ fontSize: "clamp(25px,3vw,50px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24 }}>
+                <span className="slide-left delay-1">We Build Websites,</span><br />
+                <span className="grad-text slide-right delay-2">
+                Web Apps & SaaS Products That Actually
+                </span><br />
+                <span className="slide-left delay-3">Get You Clients</span>
               </h1>
               <p className="fade-up" style={{ fontSize: 18, color: "var(--muted)", lineHeight: 1.7, marginBottom: 36, maxWidth: 480 }}>
                 Premium web design, web apps, and SaaS solutions built for businesses that want to grow faster — not just look good.
@@ -56,17 +96,33 @@ export default function HomePage() {
                 </a>
               </div>
               <div className="fade-up" style={{ display: "flex", gap: 32, marginTop: 48, flexWrap: "wrap" }}>
-                {[["10+", "Projects Built"], ["5+", "Technologies"], ["100%", "Client Focus"]].map(([n, l]) => (
-                  <div key={l}>
-                    <div className="font-display" style={{ fontSize: 28, fontWeight: 800, color: "var(--purple-g)" }}>{n}</div>
-                    <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 2 }}>{l}</div>
-                  </div>
-                ))}
+               <div className="fade-up" style={{ display: "flex", gap: 32, marginTop: 48, flexWrap: "wrap" }}>
+  <div>
+    <div className="font-display" style={{ fontSize: 28, fontWeight: 800, color: "var(--purple-g)" }}>
+      {projects}+
+    </div>
+    <div style={{ fontSize: 13, color: "var(--muted)" }}>Projects Built</div>
+  </div>
+
+  <div>
+    <div className="font-display" style={{ fontSize: 28, fontWeight: 800, color: "var(--purple-g)" }}>
+      {tech}+
+    </div>
+    <div style={{ fontSize: 13, color: "var(--muted)" }}>Technologies</div>
+  </div>
+
+  <div>
+    <div className="font-display" style={{ fontSize: 28, fontWeight: 800, color: "var(--purple-g)" }}>
+      {focus}%
+    </div>
+    <div style={{ fontSize: 13, color: "var(--muted)" }}>Client Focus</div>
+  </div>
+</div>
               </div>
             </div>
 
             {/* Right — SaaS mockup */}
-            <div className="fade-up hide-mobile" style={{ flex: "1 1 380px", maxWidth: 480 }}>
+            <div className="fade-up" style={{ flex: "1 1 100%", maxWidth: "100%", marginTop:40 }}>
               <div style={{ position: "relative" }}>
                 <div style={{ background: "linear-gradient(135deg,rgba(139,92,246,0.15),rgba(7,7,9,0.9))", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 20, padding: 20, backdropFilter: "blur(12px)" }}>
                   {/* Browser chrome */}
@@ -197,7 +253,7 @@ export default function HomePage() {
                   ))}
                 </div>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                  <button className="btn-primary" onClick={() => navigate("/contact")}>🎯 Request Demo</button>
+                  <button className="btn-primary" onClick={() => navigate("/contact")}> Request Demo</button>
                   <button className="btn-ghost" onClick={() => navigate("/products")}>Learn More →</button>
                 </div>
               </div>

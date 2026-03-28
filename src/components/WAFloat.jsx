@@ -1,7 +1,7 @@
 export default function WAFloat() {
   return (
     <a
-      href="https://wa.me/919999999999?text=Hi%2C+I+visited+your+website!"
+      href="https://wa.me/919035477754?text=Hi%2C+I+visited+your+website!"
       target="_blank"
       rel="noreferrer"
       className="wa-float"

@@ -70,7 +70,15 @@ section {
   filter: blur(80px);
   pointer-events: none;
   z-index: 0;
+  animation: floatOrb 10s ease-in-out infinite;
+  opacity: 0.7;
 }
+@keyframes floatOrb {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-40px) translateX(20px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+
 .glass {
   background: var(--card);
   border: 1px solid var(--border);
@@ -83,11 +91,27 @@ section {
   border-color: rgba(139, 92, 246, 0.25);
 }
 .grad-text {
-  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #fbbf24 100%);
+  background: linear-gradient(270deg, #8b5cf6 0%, #ec4899 50%, #fbbf24 100%);
+  
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  animation: gradientMove 5s ease infinite;
 }
+
+/* -webkit-background-clip: text; */
+
+
+@keyframes gradientMove {
+  0% { background-position: 0% }
+  50% { background-position: 100% }
+  100% { background-position: 0% }
+}
+
+
+
+
+
 .grad-text-green {
   background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
   -webkit-background-clip: text;
@@ -112,8 +136,10 @@ section {
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 40px rgba(124, 58, 237, 0.6);
+  box-shadow: 0 10px 40px rgba(124, 58, 237, 0.6);
+  /* box-shadow: 0 10px 30px rgba(139,92,246,0.4); */
 }
+
 .btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -228,7 +254,19 @@ section {
 }
 .nav-link.active {
   color: var(--purple-g);
-} /* ── Hero ── */
+}
+/* Show hamburger on mobile, hide regular links */
+.hide-mobile { display: flex; }
+.show-mobile { display: none; }
+
+@media (max-width: 768px) {
+  .hide-mobile { display: none; }
+  .show-mobile { display: flex; }
+}
+
+
+
+/* ── Hero ── */
 .hero-badge {
   display: inline-flex;
   align-items: center;
@@ -269,10 +307,12 @@ section {
 }
 
 .service-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(139, 92, 246, 0.6);
   box-shadow: 0 30px 80px rgba(0,0,0,0.3), 0 0 40px rgba(139,92,246,0.05);
 }
+
+
 
 
 
@@ -520,28 +560,14 @@ select.form-input option {
   overflow: hidden;
 }
 
-.orb {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
-  filter: blur(100px);
-  animation: float 15s infinite ease-in-out alternate;
-  opacity: 0.7;
-}
 
-.orb:nth-child(2) {
-  width: 200px;
-  height: 200px;
-  animation-duration: 20s;
-  background: linear-gradient(135deg, #10b981, #06b6d4);
-}
+
+
 
 .particle {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 2px;
+  height: 2px;
   border-radius: 50%;
   background: white;
   opacity: 0.6;
@@ -552,11 +578,9 @@ select.form-input option {
 .particle:nth-child(5) { animation-duration: 14s; opacity: 0.4; }
 .particle:nth-child(6) { animation-duration: 18s; opacity: 0.7; }
 
-@keyframes float {
-  0% { transform: translateY(0) translateX(0) scale(1); }
-  50% { transform: translateY(-50px) translateX(30px) scale(1.1); }
-  100% { transform: translateY(0) translateX(0) scale(1); }
-}
+
+
+
 
 @keyframes drift {
   0% { transform: translateY(0) translateX(0) rotate(0deg); }
@@ -585,7 +609,58 @@ main, section, footer {
 }
 
 footer {
-  background: rgba(23, 23, 66, 0.85);
+  background: rgba(23, 23, 66, 0.5);;
   backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== HEADING SLIDE ===== */
+.slide-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  animation: slideLeft 1s ease forwards;
+}
+@keyframes slideLeft {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.slide-right {
+  opacity: 0;
+  transform: translateX(60px);
+  animation: slideRight 0.8s ease forwards;
+}
+@keyframes slideRight {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+
+
+
+
+
