@@ -5,11 +5,12 @@ import { Link, useLocation } from "react-router-dom";
 
 
 const LINKS = [
-  { name: "Home", path: "/" },
-  { name: "Services", path: "/services" },
-  { name: "Products", path: "/products" },
-  { name: "Pricing", path: "/pricing" },
-  { name: "Contact", path: "/contact" },
+  { name: "Home",               path: "/" },
+  { name: "Services",           path: "/services" },
+  { name: "Products",           path: "/products" },
+  { name: "Pricing",            path: "/pricing" },
+  { name: "Final Year Project", path: "/final-year-project" },
+  { name: "Contact",            path: "/contact" },
 ];
 
 export default function Navbar() {
@@ -33,12 +34,21 @@ export default function Navbar() {
         </div>
 
         {/* Links */}
-        <div className="hide-mobile" style={{ display: "flex", gap: 36 }}>
+        <div className="hide-mobile" style={{ display: "flex", gap: 28 }}>
           {LINKS.map((l) => (
             <Link
               key={l.name}
               to={l.path}
               className={`nav-link ${location.pathname === l.path ? "active" : ""}`}
+              style={
+                l.path === "/final-year-project"
+                  ? {
+                      color: "#10B981",
+                      fontWeight: 600,
+                      fontSize: 13,
+                    }
+                  : {}
+              }
             >
               {l.name}
             </Link>
@@ -103,10 +113,10 @@ export default function Navbar() {
         left: 0,
         width: "100vw",
         height: "100vh",
-        background: "rgba(0,0,0,0.2)", // semi-transparent overlay
+        background: "rgba(0,0,0,0.2)",
         zIndex: 90,
       }}
-      onClick={() => setMobileOpen(false)} // ✅ click anywhere closes menu
+      onClick={() => setMobileOpen(false)}
     ></div>
 
     {/* Actual menu */}
@@ -130,9 +140,16 @@ export default function Navbar() {
         <Link
           key={l.name}
           to={l.path}
-          onClick={() => setMobileOpen(false)} // close menu on link click
+          onClick={() => setMobileOpen(false)}
           className={`nav-link ${location.pathname === l.path ? "active" : ""}`}
-          style={{ textAlign: "center", width: "100%", maxWidth: 200 }}
+          style={{
+            textAlign: "center",
+            width: "100%",
+            maxWidth: 200,
+            ...(l.path === "/final-year-project"
+              ? { color: "#10B981", fontWeight: 600 }
+              : {}),
+          }}
         >
           {l.name}
         </Link>

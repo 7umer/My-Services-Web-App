@@ -557,6 +557,7 @@ select.form-input option {
   inset: 0;
   z-index: 0;
   background: #050507;
+
   overflow: hidden;
 }
 
