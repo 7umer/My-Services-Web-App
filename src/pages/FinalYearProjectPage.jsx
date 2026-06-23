@@ -433,7 +433,7 @@ export default function FinalYearProjectPage() {
                   <div
                     style={{
                       position: "absolute",
-                      top: -12,
+                      top: 10,
                       left: "50%",
                       transform: "translateX(-50%)",
                       background: `linear-gradient(135deg, ${plan.color}, ${plan.color}cc)`,
@@ -445,6 +445,7 @@ export default function FinalYearProjectPage() {
                       borderRadius: 100,
                     }}
                   >
+                    
                     MOST POPULAR
                   </div>
                 )}
