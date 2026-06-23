@@ -134,7 +134,7 @@ export default function FinalYearProjectPage() {
                     margin: "0 auto 16px",
                   }}
                 >
-                  {item.icon}
+                  <item.icon size={24} />
                 </div>
                 <p style={{ fontWeight: 700, fontSize: 16 }}>{item.label}</p>
               </div>
@@ -192,7 +192,7 @@ export default function FinalYearProjectPage() {
                     flexShrink: 0,
                   }}
                 >
-                  ✦
+                  <item.icon size={18} />
                 </div>
                 <span style={{ fontWeight: 600, fontSize: 15 }}>{item.label}</span>
               </div>
@@ -261,7 +261,7 @@ export default function FinalYearProjectPage() {
                     margin: "0 auto 14px",
                   }}
                 >
-                  {tech.icon}
+                  <tech.icon size={26} />
                 </div>
                 <p style={{ fontWeight: 600, fontSize: 14 }}>{tech.label}</p>
               </div>
@@ -464,7 +464,7 @@ export default function FinalYearProjectPage() {
                       marginBottom: 18,
                     }}
                   >
-                    {plan.icon}
+                    <plan.icon size={28} color={plan.color} />
                   </div>
 
                   <h3
