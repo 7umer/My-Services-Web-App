@@ -291,7 +291,7 @@ export default function HomePage() {
 
       <div className="divider" />
 
-      {/* ── PORTFOLIO (placeholder — replace with real projects) ── */}
+      {/* ── PORTFOLIO (placeholder — replace with real projects) ──
       <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div className="fade-up dir-left" style={{ marginBottom: 56 }}>
@@ -323,7 +323,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       <div className="divider" />
 
