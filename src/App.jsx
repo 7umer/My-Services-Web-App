@@ -9,6 +9,7 @@ import "./styles/globals.css";
 import Navbar   from "./components/Navbar";
 import Footer   from "./components/Footer";
 import WAFloat  from "./components/WAFloat";
+import StickyContactBar from "./components/StickyContactBar";
 
 import HomePage               from "./pages/HomePage";
 import ServicesPage           from "./pages/ServicesPage";
@@ -88,6 +89,7 @@ export default function App() {
 
       <Footer />
       <WAFloat />
+      <StickyContactBar />
     </>
   );
 }

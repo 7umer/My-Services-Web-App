@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { useScrolled } from "../hooks/useScrolled";
 import { Link, useLocation } from "react-router-dom";
+import logo from "../assets/um-web-solutions-logo-full.png";
 
 
 const LINKS = [
@@ -27,11 +28,13 @@ export default function Navbar() {
       }}>
 
         {/* Logo */}
-        <div className="font-display" style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em" }}>
-          <span style={{ color: "var(--text)" }}>UM </span>
-          <span className="grad-text">Web Solutions</span>
-          <span style={{ color: "var(--purple)", fontSize: 22 }}>.</span>
-        </div>
+        <Link to="/" style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={logo}
+            alt="UM Web Solutions"
+            style={{ height: 34, width: "auto", display: "block" }}
+          />
+        </Link>
 
         {/* Links */}
         <div className="hide-mobile" style={{ display: "flex", gap: 28 }}>

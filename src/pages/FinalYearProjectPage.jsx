@@ -1,4 +1,5 @@
 import { useFadeUp } from "../hooks/useScrolled";
+import { Phone, MessageSquare, FileText, Rocket } from "lucide-react";
 import {
   FYP_WHY_CHOOSE,
   FYP_TECH_STACK,
@@ -11,7 +12,7 @@ import {
 const WA_BASE = "https://wa.me/919035477754?text=Hi%2C+I+need+help+with+my+Final+Year+Project!";
 
 /* ── tiny reusable check icon ── */
-function Check({ color = "#10B981" }) {
+function Check({ color = "#0e8f86" }) {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
       <circle cx="10" cy="10" r="10" fill={color} />
@@ -74,14 +75,14 @@ export default function FinalYearProjectPage() {
                     gap: 8,
                     padding: "10px 18px",
                     borderRadius: 100,
-                    background: "rgba(16,185,129,0.08)",
-                    border: "1px solid rgba(16,185,129,0.2)",
-                    color: "#10B981",
+                    background: "rgba(14,143,134,0.08)",
+                    border: "1px solid rgba(14,143,134,0.2)",
+                    color: "#0e8f86",
                     fontSize: 13,
                     fontWeight: 500,
                   }}
                 >
-                  <Check color="#10B981" />
+                  <Check color="#0e8f86" />
                   {f}
                 </span>
               )
@@ -126,7 +127,7 @@ export default function FinalYearProjectPage() {
                     width: 56,
                     height: 56,
                     borderRadius: "50%",
-                    background: "rgba(16,185,129,0.15)",
+                    background: "rgba(14,143,134,0.15)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -163,7 +164,7 @@ export default function FinalYearProjectPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
               gap: 14,
             }}
           >
@@ -183,11 +184,11 @@ export default function FinalYearProjectPage() {
                     width: 36,
                     height: 36,
                     borderRadius: "50%",
-                    background: "rgba(139,92,246,0.15)",
+                    background: "rgba(36,84,216,0.15)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "#8B5CF6",
+                    color: "#2454d8",
                     fontSize: 16,
                     flexShrink: 0,
                   }}
@@ -205,9 +206,9 @@ export default function FinalYearProjectPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "18px 22px",
-                border: "1px dashed rgba(16,185,129,0.35)",
+                border: "1px dashed rgba(14,143,134,0.35)",
                 borderRadius: 16,
-                color: "#10B981",
+                color: "#0e8f86",
                 fontStyle: "italic",
                 fontSize: 14,
                 fontWeight: 500,
@@ -253,7 +254,7 @@ export default function FinalYearProjectPage() {
                     width: 52,
                     height: 52,
                     borderRadius: "50%",
-                    background: "rgba(139,92,246,0.15)",
+                    background: "rgba(36,84,216,0.15)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -290,7 +291,7 @@ export default function FinalYearProjectPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
               gap: 14,
             }}
           >
@@ -305,7 +306,7 @@ export default function FinalYearProjectPage() {
                   padding: "18px 22px",
                 }}
               >
-                <Check color="#10B981" />
+                <Check color="#0e8f86" />
                 <span style={{ fontWeight: 600, fontSize: 15 }}>{item}</span>
               </div>
             ))}
@@ -317,9 +318,9 @@ export default function FinalYearProjectPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "18px 22px",
-                border: "1px dashed rgba(16,185,129,0.35)",
+                border: "1px dashed rgba(14,143,134,0.35)",
                 borderRadius: 16,
-                color: "#10B981",
+                color: "#0e8f86",
                 fontStyle: "italic",
                 fontSize: 14,
                 fontWeight: 500,
@@ -445,7 +446,6 @@ export default function FinalYearProjectPage() {
                       borderRadius: 100,
                     }}
                   >
-                    
                     MOST POPULAR
                   </div>
                 )}
@@ -523,9 +523,9 @@ export default function FinalYearProjectPage() {
                 gap: 10,
                 padding: "14px 32px",
                 borderRadius: 100,
-                background: "rgba(16,185,129,0.1)",
-                border: "1px solid rgba(16,185,129,0.3)",
-                color: "#10B981",
+                background: "rgba(14,143,134,0.1)",
+                border: "1px solid rgba(14,143,134,0.3)",
+                color: "#0e8f86",
                 fontWeight: 600,
                 fontSize: 15,
                 textDecoration: "none",
@@ -533,7 +533,7 @@ export default function FinalYearProjectPage() {
               }}
             >
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                <path d="M3 4h14M3 8h10M3 12h14M3 16h8" stroke="#10B981" strokeWidth="1.8" strokeLinecap="round"/>
+                <path d="M3 4h14M3 8h10M3 12h14M3 16h8" stroke="#0e8f86" strokeWidth="1.8" strokeLinecap="round"/>
               </svg>
               Contact Us for Custom Pricing
             </a>
@@ -549,8 +549,8 @@ export default function FinalYearProjectPage() {
             style={{
               padding: "60px 40px",
               textAlign: "center",
-              background: "linear-gradient(135deg, rgba(139,92,246,0.08) 0%, rgba(16,185,129,0.05) 100%)",
-              borderColor: "rgba(139,92,246,0.15)",
+              background: "linear-gradient(135deg, rgba(36,84,216,0.08) 0%, rgba(14,143,134,0.05) 100%)",
+              borderColor: "rgba(36,84,216,0.15)",
             }}
           >
             <div className="section-tag" style={{ justifyContent: "center" }}>Get Started</div>
@@ -581,17 +581,19 @@ export default function FinalYearProjectPage() {
               }}
             >
               {[
-                { icon: "📞", label: "Free Consultation" },
-                { icon: "💬", label: "Technical Guidance" },
-                { icon: "📄", label: "Documentation Support" },
-                { icon: "🚀", label: "End-to-End Development Assistance" },
+                { icon: Phone, label: "Free Consultation" },
+                { icon: MessageSquare, label: "Technical Guidance" },
+                { icon: FileText, label: "Documentation Support" },
+                { icon: Rocket, label: "End-to-End Development Assistance" },
               ].map((item) => (
                 <div
                   key={item.label}
                   className="glass"
                   style={{ padding: "20px 14px", textAlign: "center" }}
                 >
-                  <div style={{ fontSize: 22, marginBottom: 8 }}>{item.icon}</div>
+                  <div style={{ color: "var(--purple)", marginBottom: 10, display: "flex", justifyContent: "center" }}>
+                    <item.icon size={20} />
+                  </div>
                   <p style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.4 }}>{item.label}</p>
                 </div>
               ))}

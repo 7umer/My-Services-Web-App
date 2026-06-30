@@ -1,165 +1,257 @@
 import { useFadeUp } from "../hooks/useScrolled";
 import { SERVICES } from "../constants/services";
-
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { FEATURES } from "../constants/features";
+import { ImageIcon, ShieldCheck } from "lucide-react";
 
+const TECH_STACK = ["React", "Django", "PostgreSQL", "Supabase", "Tailwind CSS", "Figma"];
+
+const PORTFOLIO_PLACEHOLDERS = [1, 2, 3];
 
 export default function HomePage() {
-
-  const useCounter = (end, duration = 2000) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let start = 0;
-    const increment = end / (duration / 16);
-
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= end) {
-        setCount(end);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 16);
-
-    return () => clearInterval(timer);
-  }, [end, duration]);
-
-  return count;
-};
-
-
-
+  // `start` gates the counter so it only begins once the stats section has
+  // actually scrolled into view, instead of finishing instantly on mount
+  // (which is why it used to look like a static number by the time anyone
+  // scrolled down to it).
+  const useCounter = (end, start, duration = 2000) => {
+    const [count, setCount] = useState(0);
+    useEffect(() => {
+      if (!start) return;
+      let startVal = 0;
+      const increment = end / (duration / 16);
+      const timer = setInterval(() => {
+        startVal += increment;
+        if (startVal >= end) {
+          setCount(end);
+          clearInterval(timer);
+        } else {
+          setCount(Math.floor(startVal));
+        }
+      }, 16);
+      return () => clearInterval(timer);
+    }, [end, start, duration]);
+    return count;
+  };
 
   const navigate = useNavigate();
   useFadeUp();
 
- 
-  
   const [isIndia, setIsIndia] = useState(true);
 
-  const projects = useCounter(10);
-  const tech = useCounter(5);
-  const focus = useCounter(100);
+  // Trigger the count-up only once the trust band scrolls into view.
+  const statsRef = useRef(null);
+  const [statsInView, setStatsInView] = useState(false);
+
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStatsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const projects = useCounter(10, statsInView);
+  const tech = useCounter(5, statsInView);
 
   useEffect(() => {
     fetch("https://ipapi.co/json/")
-    .then(res => res.json())
-    .then(data => {
-      setIsIndia(data.country === "IN");
-    })
-    .catch(() => setIsIndia(true));
+      .then((res) => res.json())
+      .then((data) => setIsIndia(data.country === "IN"))
+      .catch(() => setIsIndia(true));
   }, []);
-
-
-  
-
-
 
   return (
     <div>
-      {/* ── HERO ── */}
-      <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", overflow: "hidden", paddingTop: 80 }}>
+      {/* ── HERO PHOTO BANNER (text overlaid on the image) ──
+          Photo by Jakub Żerdzicki on Unsplash (unsplash.com/photos/bWVBCDtTRJI)
+          Free to use under the Unsplash License. */}
+      <div style={{ position: "relative", width: "100%", minHeight: "clamp(560px, 78vw, 760px)", overflow: "hidden", background: "linear-gradient(135deg, #1a2540, #0b1220)" }}>
+        <img
+          src="https://images.unsplash.com/photo-1753715613434-9c7cb58876b9?fm=jpg&q=80&w=2400&auto=format&fit=crop"
+          alt="Programmer coding at a desk with several monitors"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(11,18,32,0.78) 0%, rgba(11,18,32,0.6) 45%, rgba(11,18,32,0.82) 100%)" }} />
+
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto", padding: "150px 24px 70px", width: "100%", textAlign: "center" }}>
+          <div className="fade-up dir-left" style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            padding: "7px 14px", borderRadius: 100,
+            border: "1px solid rgba(255,255,255,0.18)",
+            background: "rgba(255,255,255,0.06)",
+            fontSize: 13, fontWeight: 500, color: "#cfd6e2", marginBottom: 24,
+          }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#1faa59", flexShrink: 0 }} />
+            Available for new projects
+          </div>
+          <h1 className="font-display fade-up dir-right" style={{ fontSize: "clamp(30px,4vw,52px)", fontWeight: 800, lineHeight: 1.14, letterSpacing: "-0.025em", marginBottom: 22, color: "#fff" }}>
+            Creative &amp; Reliable Development<br />
+            <span style={{ color: "#8fb0ff" }}>for Businesses That Want to</span><br />
+            Grow Online
+          </h1>
+          <p className="fade-up dir-left" style={{ fontSize: 17.5, color: "#c5cbd6", lineHeight: 1.7, marginBottom: 34, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
+            We design and build the full stack — frontend, backend and deployment —
+            so what you ship to clients and customers looks and works like it was
+            made by a real engineering team.
+          </p>
+          <div className="fade-up dir-right" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 36, justifyContent: "center" }}>
+            <button className="btn-primary" onClick={() => navigate("/contact")}>
+              Get a Free Quote
+            </button>
+            <a
+              href="https://wa.me/919035477754?text=Hi%2C+I+want+to+discuss+a+project!"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-ghost"
+              style={{ borderColor: "rgba(255,255,255,0.3)", color: "#fff" }}
+            >
+              Contact Us
+            </a>
+          </div>
+
+          <div className="fade-up dir-left" style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
+            {TECH_STACK.map((t) => (
+              <span key={t} style={{
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: 12.5,
+                color: "#c5cbd6",
+                border: "1px solid rgba(255,255,255,0.18)",
+                borderRadius: 6,
+                padding: "5px 10px",
+              }}>
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── HERO MOCKUP + QUICK SERVICES (white, below the photo) ── */}
+      <section style={{ paddingTop: 0, paddingBottom: 70, position: "relative", overflow: "hidden" }}>
         <div className="grid-bg" />
-        <div className="orb" style={{ width: 500, height: 500, background: "rgba(124,58,237,0.12)", top: -100, right: -100 }} />
-        <div className="orb" style={{ width: 300, height: 300, background: "rgba(16,185,129,0.08)", bottom: 100, left: -50 }} />
 
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 24px", width: "100%", position: "relative", zIndex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 60, flexWrap: "wrap" }}>
-
-            {/* Left */}
-            <div style={{ flex: "1 1 480px" }}>
-              <div className="hero-badge fade-up">
-                <span /> Available for new projects
+        {/* Dashboard mockup — its own showcase row, fully below the hero text */}
+        <div style={{ maxWidth: 620, margin: "56px auto 0", padding: "0 24px", position: "relative", zIndex: 1 }}>
+          <div className="fade-up dir-left demo-mockup" style={{ position: "relative" }}>
+            <div style={{ background: "#fff", border: "1px solid var(--border)", borderRadius: 16, padding: 18, boxShadow: "0 0 0 1px rgba(16,25,43,0.04), 0 0 70px rgba(0,0,0,0.35), 0 25px 50px rgba(0,0,0,0.25)", position: "relative", overflow: "hidden" }}>
+              {/* Simulated cursor */}
+              <div className="demo-cursor demo-anim" />
+              {/* Browser chrome */}
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
+                {["#c0392b", "#b6802a", "#0e8f86"].map((c) => (
+                  <div key={c} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />
+                ))}
+                <div style={{ flex: 1, background: "var(--bg2)", borderRadius: 6, height: 20, marginLeft: 10 }} />
               </div>
-              <h1 className="font-display slide-left delay-1" style={{ fontSize: "clamp(25px,3vw,50px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24 }}>
-                <span className="slide-left delay-1">We Build Websites,</span><br />
-                <span className="grad-text slide-right delay-2">
-                Web Apps & SaaS Products That Actually
-                </span><br />
-                <span className="slide-left delay-3">Get You Clients</span>
-              </h1>
-              <p className="fade-up" style={{ fontSize: 18, color: "var(--muted)", lineHeight: 1.7, marginBottom: 36, maxWidth: 480 }}>
-                Premium web design, web apps, and SaaS solutions built for businesses that want to grow faster — not just look good.
-              </p>
-              <div className="fade-up" style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-                <button className="btn-primary" onClick={() => navigate("/contact")}>
-                  Get Free Demo
-                </button>
-                <a href="https://wa.me/919035477754?text=Hi%2C+I+want+to+discuss+a+project!" target="_blank" rel="noreferrer" className="btn-wa">
-                  <span></span> Chat on WhatsApp
-                </a>
-              </div>
-              <div className="fade-up" style={{ display: "flex", gap: 32, marginTop: 48, flexWrap: "wrap" }}>
-               <div className="fade-up" style={{ display: "flex", gap: 32, marginTop: 48, flexWrap: "wrap" }}>
-  <div>
-    <div className="font-display" style={{ fontSize: 28, fontWeight: 800, color: "var(--purple-g)" }}>
-      {projects}+
-    </div>
-    <div style={{ fontSize: 13, color: "var(--muted)" }}>Projects Built</div>
-  </div>
-
-  <div>
-    <div className="font-display" style={{ fontSize: 28, fontWeight: 800, color: "var(--purple-g)" }}>
-      {tech}+
-    </div>
-    <div style={{ fontSize: 13, color: "var(--muted)" }}>Technologies</div>
-  </div>
-
-  <div>
-    <div className="font-display" style={{ fontSize: 28, fontWeight: 800, color: "var(--purple-g)" }}>
-      {focus}%
-    </div>
-    <div style={{ fontSize: 13, color: "var(--muted)" }}>Client Focus</div>
-  </div>
-</div>
-              </div>
-            </div>
-
-            {/* Right — SaaS mockup */}
-            <div className="fade-up" style={{ flex: "1 1 100%", maxWidth: "100%", marginTop:40 }}>
-              <div style={{ position: "relative" }}>
-                <div style={{ background: "linear-gradient(135deg,rgba(139,92,246,0.15),rgba(7,7,9,0.9))", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 20, padding: 20, backdropFilter: "blur(12px)" }}>
-                  {/* Browser chrome */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 16 }}>
-                    {["#EF4444","#FBBF24","#10B981"].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c }} />)}
-                    <div style={{ flex: 1, background: "rgba(255,255,255,0.06)", borderRadius: 6, height: 22, marginLeft: 8 }} />
-                  </div>
-                  {/* Dashboard */}
-                  <div style={{ background: "rgba(0,0,0,0.4)", borderRadius: 12, padding: 16 }}>
-                    <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 12, fontFamily: "Syne" }}>CLINIC SAAS — DASHBOARD</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
-                      {[["48","Patients Today","#8B5CF6"],["₹24,500","Revenue","#10B981"],["12","Appointments","#FBBF24"],["3","Pending Bills","#EF4444"]].map(([v,l,c]) => (
-                        <div key={l} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 12, border: `1px solid ${c}22` }}>
-                          <div style={{ fontSize: 20, fontWeight: 700, color: c, fontFamily: "Syne" }}>{v}</div>
-                          <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{l}</div>
-                        </div>
-                      ))}
+              {/* Dashboard */}
+              <div style={{ background: "var(--bg2)", borderRadius: 10, padding: 16, border: "1px solid var(--border)" }}>
+                <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--muted)", marginBottom: 12, letterSpacing: "0.04em" }}>
+                  CLINIC SAAS — DASHBOARD
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
+                  {[["48", "Patients Today", "#2454d8"], ["₹24,500", "Revenue", "#0e8f86"], ["12", "Appointments", "#b6802a"], ["3", "Pending Bills", "#c0392b"]].map(([v, l, c], i) => (
+                    <div key={l} className={i === 0 ? "demo-ring demo-anim" : ""} style={{ background: "#fff", borderRadius: 8, padding: 12, border: "1px solid var(--border)" }}>
+                      <div className="font-display" style={{ fontSize: 18, fontWeight: 700, color: c }}>
+                        {i === 3 ? <span className="demo-tick demo-anim">{v}</span> : v}
+                      </div>
+                      <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{l}</div>
                     </div>
-                    <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: 12, marginBottom: 10 }}>
-                      <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>RECENT PATIENTS</div>
-                      {["Rahul Sharma — 10:30 AM","Priya Patel — 11:00 AM","Arjun Singh — 11:45 AM"].map(p => (
-                        <div key={p} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                          <div style={{ width: 24, height: 24, borderRadius: "50%", background: "rgba(139,92,246,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>👤</div>
-                          <div style={{ fontSize: 12, color: "var(--muted)" }}>{p}</div>
-                        </div>
-                      ))}
+                  ))}
+                </div>
+                <div style={{ background: "#fff", borderRadius: 8, padding: 12, marginBottom: 10, border: "1px solid var(--border)" }}>
+                  <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, fontWeight: 600 }}>RECENT PATIENTS</div>
+                  {["Rahul Sharma — 10:30 AM", "Priya Patel — 11:00 AM", "Arjun Singh — 11:45 AM"].map((p) => (
+                    <div key={p} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", borderBottom: "1px solid var(--border)" }}>
+                      <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(36,84,216,0.12)", flexShrink: 0 }} />
+                      <div style={{ fontSize: 12.5, color: "var(--text)" }}>{p}</div>
                     </div>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <div style={{ flex: 1, background: "rgba(139,92,246,0.2)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "var(--purple-g)", textAlign: "center" }}>+ Add Patient</div>
-                      <div style={{ flex: 1, background: "rgba(16,185,129,0.2)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "var(--green)", textAlign: "center" }}>New Bill</div>
-                    </div>
+                  ))}
+                  <div className="demo-row-reveal demo-anim" style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0" }}>
+                    <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(14,143,134,0.14)", flexShrink: 0 }} />
+                    <div style={{ fontSize: 12.5, color: "var(--text)" }}>Sneha Reddy — 12:15 PM</div>
                   </div>
                 </div>
-                {/* Floating badge */}
-                <div style={{ position: "absolute", bottom: -16, left: -16, background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 12, padding: "10px 16px", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ color: "#10B981", fontSize: 18 }}>✓</span>
-                  <span style={{ fontSize: 13, color: "#10B981" }}>Clinic SaaS — Live Demo</span>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <div className="demo-press demo-anim" style={{ flex: 1, background: "var(--purple)", borderRadius: 7, padding: "8px 12px", fontSize: 12, color: "#fff", textAlign: "center", fontWeight: 600 }}>+ Add Patient</div>
+                  <div className="demo-press-2 demo-anim" style={{ flex: 1, background: "#fff", border: "1px solid var(--border)", borderRadius: 7, padding: "8px 12px", fontSize: 12, color: "var(--text)", textAlign: "center", fontWeight: 600 }}>New Bill</div>
+                </div>
+              </div>
+            </div>
+            {/* Floating badge */}
+            <div style={{ position: "absolute", bottom: -14, left: -14, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: "9px 14px", boxShadow: "0 10px 24px rgba(16,25,43,0.1)", display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ color: "#0e8f86", fontSize: 16 }}>✓</span>
+              <span style={{ fontSize: 12.5, color: "var(--text)", fontWeight: 600 }}>Clinic SaaS — Live Preview</span>
+            </div>
+          </div>
+          <div style={{ textAlign: "center", marginTop: 26, fontSize: 12, color: "var(--faint)" }}>
+            Live demo — hover to pause
+          </div>
+        </div>
+
+        {/* Quick services row */}
+        <div style={{ maxWidth: 1200, margin: "64px auto 0", padding: "32px 24px 0", borderTop: "1px solid var(--border)" }}>
+          <div className="fade-up dir-right" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 24 }}>
+            {SERVICES.slice(0, 4).map((s, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 42, height: 42, borderRadius: 10, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center", color: s.color, flexShrink: 0 }}>
+                  <s.icon size={20} />
+                </div>
+                <span style={{ fontSize: 14.5, fontWeight: 600, color: "var(--text)" }}>{s.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TRUST / STATS BAND (dark) ── */}
+      <section style={{ padding: "0 24px 90px" }}>
+        <div className="fade-up dir-left trust-band" style={{ maxWidth: 1200, margin: "0 auto", background: "#121619", borderRadius: 18, padding: "48px 40px" }}>
+          <div style={{ maxWidth: 640, marginBottom: 40 }}>
+            <div className="section-tag" style={{ color: "#8fb0ff" }}>Why Trust Us</div>
+            <p style={{ fontSize: 16, color: "#aab3c2", lineHeight: 1.7 }}>
+              Whether you're a startup founder or a small business owner, every project gets the
+              same full attention — from the first call to final deployment, with direct access
+              to the person actually building it.
+            </p>
+          </div>
+
+          {/* 4 equal boxes — CSS Grid, repeat(4, 1fr) */}
+          <div className="stats-grid" ref={statsRef}>
+            <div className="stat-box">
+              <div className="font-display stat-box-num">{projects}+</div>
+              <p>Projects Delivered</p>
+            </div>
+            <div className="stat-box">
+              <div className="font-display stat-box-num">{tech}+</div>
+              <p>Core Technologies</p>
+            </div>
+            <div className="stat-box">
+              <div className="font-display stat-box-num">&lt;24h</div>
+              <p>Avg. Response Time</p>
+            </div>
+            <div className="stat-box logo-box">
+              {/* Spinning trust badge — pure CSS/SVG, no image asset needed */}
+              <div className="trust-badge" aria-hidden="true">
+                <svg className="trust-badge-ring" viewBox="0 0 120 120">
+                  <path id="badgeCirclePath" fill="none" d="M60,60 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0" />
+                  <text fontSize="8.6" letterSpacing="2.2" fill="#cfd6e2">
+                    <textPath href="#badgeCirclePath" startOffset="0%">
+                      • TRUSTED DEV PARTNER • UM WEB SOLUTIONS
+                    </textPath>
+                  </text>
+                </svg>
+                <div className="trust-badge-center">
+                  <ShieldCheck size={26} />
                 </div>
               </div>
             </div>
@@ -167,56 +259,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="divider" />
-
       {/* ── SERVICES PREVIEW ── */}
-      <section style={{ padding: "100px 24px" }}>
+      <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up" style={{ marginBottom: 60 }}>
-            <div className="section-tag">What We Do</div>
-            <h2 className="font-display" style={{ fontSize: "clamp(32px,4vw,52px)", fontWeight: 800, letterSpacing: "-0.03em" }}>
-              Services Built for<br /><span className="grad-text">Real Business Growth</span>
+          <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
+            <div className="section-tag">What We're Offering</div>
+            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em" }}>
+              Services built for <span className="grad-text">real business growth</span>
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 20 }}>
             {SERVICES.map((s, i) => (
-              <div key={i} className="service-card fade-up"   style={{ padding: "28px 24px",   // ✅ MORE INNER SPACE
-                                                              borderRadius: 16, height: "100%" }}>
-                <div
-  className="service-icon"
-  style={{
-    background: s.bg,
-    color: s.color,
-    marginBottom: 16   // ✅ space below icon
-  }}
->
-  {s.icon}
-</div>
-
-<h3
-  className="font-display"
-  style={{
-    fontSize: 18,
-    fontWeight: 700,
-    marginBottom: 10   // ✅ more space
-  }}
->
-  {s.title}
-</h3>
-
-<p
-  style={{
-    color: "var(--muted)",
-    fontSize: 14,
-    lineHeight: 1.7,   // ✅ more readable
-    marginBottom: 20   // ✅ spacing before tags
-  }}
->
-  {s.desc}
-</p>
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 8 }}>
-                  {s.tags.map(t => (
-                    <span key={t} style={{ fontSize: 11, padding: "4px 10px", borderRadius: 100, background: `${s.color}11`, border: `1px solid ${s.color}33`, color: s.color }}>{t}</span>
+              <div key={i} className={`service-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`} style={{ padding: "26px 24px", height: "100%" }}>
+                <div className="service-icon" style={{ background: s.bg, color: s.color, marginBottom: 16 }}>
+                  <s.icon size={22} />
+                </div>
+                <h3 className="font-display" style={{ fontSize: 17.5, fontWeight: 700, marginBottom: 8 }}>{s.title}</h3>
+                <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.65, marginBottom: 18 }}>{s.desc}</p>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {s.tags.map((t) => (
+                    <span key={t} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11.5, padding: "4px 9px", borderRadius: 6, background: "var(--bg2)", color: "var(--muted)" }}>
+                      {t}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -227,62 +291,82 @@ export default function HomePage() {
 
       <div className="divider" />
 
-      {/* ── SAAS HIGHLIGHT ── */}
-      <section style={{ padding: "100px 24px" }}>
+      {/* ── PORTFOLIO (placeholder — replace with real projects) ── */}
+      <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up" style={{ marginBottom: 60 }}>
-            <div className="section-tag">SaaS Products</div>
-            <h2 className="font-display" style={{ fontSize: "clamp(32px,4vw,52px)", fontWeight: 800, letterSpacing: "-0.03em" }}>
-              Products We're Building<br /><span className="grad-text-green">For Real Businesses</span>
+          <div className="fade-up dir-left" style={{ marginBottom: 56 }}>
+            <div className="section-tag">Portfolio</div>
+            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em", marginBottom: 12 }}>
+              Recent <span className="grad-text">work</span>
             </h2>
+            <p style={{ color: "var(--muted)", fontSize: 15 }}>
+              Case studies coming soon — these cards are placeholders, ready to swap for real projects and screenshots.
+            </p>
           </div>
-          <div className="product-card fade-up" style={{ display: "flex", flexWrap: "wrap" }}>
-            <div style={{ flex: "1 1 400px", padding: 48, position: "relative" }}>
-              <div className="orb" style={{ width: 200, height: 200, background: "rgba(139,92,246,0.12)", top: -60, left: -60 }} />
-              <div style={{ position: "relative", zIndex: 1 }}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 100, background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", fontSize: 12, color: "var(--green)", marginBottom: 20 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", display: "inline-block", animation: "pulse 2s infinite" }} /> In Development
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 20, perspective: 1000 }}>
+            {PORTFOLIO_PLACEHOLDERS.map((n, i) => (
+              <div key={n} className={`portfolio-card tilt-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`}>
+                <div className="portfolio-thumb">
+                  <ImageIcon size={28} />
                 </div>
-                <h3 className="font-display" style={{ fontSize: 32, fontWeight: 800, marginBottom: 12 }}>Clinic SaaS</h3>
-                <p style={{ color: "var(--muted)", fontSize: 15, lineHeight: 1.7, marginBottom: 28 }}>
-                  A complete clinic management system — patient records, prescriptions, billing, and appointment tracking. Built for modern clinics.
-                </p>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32 }}>
-                  {["Patient Management","Prescription System","Billing & Invoices","Appointment Tracking","Staff Management","Reports & Analytics"].map(f => (
-                    <div key={f} className="feature-tag"><span className="dot">✓</span>{f}</div>
-                  ))}
-                </div>
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                  <button className="btn-primary" onClick={() => navigate("/contact")}> Request Demo</button>
-                  <button className="btn-ghost" onClick={() => navigate("/products")}>Learn More →</button>
+                <div style={{ padding: 22 }}>
+                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--faint)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    Project {n}
+                  </span>
+                  <h3 className="font-display" style={{ fontSize: 17, fontWeight: 700, margin: "6px 0 8px" }}>Project Name</h3>
+                  <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.6, marginBottom: 16 }}>
+                    Add a short description of the project, the problem it solved, and the stack used.
+                  </p>
+                  <span style={{ fontSize: 13, color: "var(--faint)", fontWeight: 600 }}>View Website →</span>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ── SAAS HIGHLIGHT ── */}
+      <section style={{ padding: "90px 24px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
+            <div className="section-tag">SaaS Products</div>
+            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em" }}>
+              A product we're building <span className="grad-text-green">for real businesses</span>
+            </h2>
+          </div>
+          <div className="fade-up dir-left" style={{ display: "flex", flexWrap: "wrap", borderRadius: 16, overflow: "hidden", background: "#121619" }}>
+            <div style={{ flex: "1 1 400px", padding: 44 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 100, background: "rgba(14,143,134,0.12)", border: "1px solid rgba(14,143,134,0.3)", fontSize: 12, color: "#4fd1c5", marginBottom: 18, fontWeight: 600 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4fd1c5", display: "inline-block" }} /> In Development
+              </div>
+              <h3 className="font-display" style={{ fontSize: 28, fontWeight: 800, marginBottom: 12, color: "#fff" }}>Clinic SaaS</h3>
+              <p style={{ color: "#aab3c2", fontSize: 15, lineHeight: 1.7, marginBottom: 26 }}>
+                A complete clinic management system — patient records, prescriptions, billing, and appointment tracking. Built for modern clinics.
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 30 }}>
+                {["Patient Management", "Prescription System", "Billing & Invoices", "Appointment Tracking", "Staff Management", "Reports & Analytics"].map((f) => (
+                  <div key={f} className="feature-tag" style={{ color: "#c5cbd6" }}><span className="dot">✓</span>{f}</div>
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <button className="btn-primary" onClick={() => navigate("/contact")}>Request Demo</button>
+                <button className="btn-ghost" style={{ borderColor: "rgba(255,255,255,0.3)", color: "#fff" }} onClick={() => navigate("/products")}>Learn More →</button>
+              </div>
             </div>
-            <div style={{ flex: "1 1 300px", background: "rgba(0,0,0,0.3)", padding: 32, display: "flex", flexDirection: "column", justifyContent: "center", borderLeft: "1px solid var(--border)" }}>
-              <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 20, fontFamily: "Syne", letterSpacing: "0.08em" }}>PRICING PLANS</div>
-              {[["Basic","₹499/mo","$15/mo"],["Pro","₹1499/mo","$35/mo"],["Clinic Chain","₹2999/mo","$79/mo"]].map(([plan,inr,usd]) => (
-                <div
-                key={plan}
-                className="pricing-card-hover"
-                style={{
-                  padding: 16,
-                  borderRadius: 12,
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid var(--border)",
-                  marginBottom: 10,
-                  transition: "all 0.3s ease",
-                }}>
+            <div style={{ flex: "1 1 280px", background: "rgba(255,255,255,0.03)", padding: 32, display: "flex", flexDirection: "column", justifyContent: "center", borderLeft: "1px solid rgba(255,255,255,0.08)" }}>
+              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#8b96a8", marginBottom: 16, letterSpacing: "0.06em" }}>PRICING PLANS</div>
+              {[["Basic", "₹499/mo", "$15/mo"], ["Pro", "₹1499/mo", "$35/mo"], ["Clinic Chain", "₹2999/mo", "$79/mo"]].map(([plan, inr, usd]) => (
+                <div key={plan} className="pricing-card-hover" style={{ padding: 16, borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", marginBottom: 10 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 14, fontWeight: 500, color: "var(--text)" }}>{plan}</span><div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)" }}>
-                        {isIndia ? inr : usd}
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                      ))}
+                    <span style={{ fontSize: 14, fontWeight: 500, color: "#fff" }}>{plan}</span>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>{isIndia ? inr : usd}</div>
+                  </div>
+                </div>
+              ))}
               <a href="https://wa.me/919035477754?text=Hi%2C+I'm+interested+in+Clinic+SaaS!" target="_blank" rel="noreferrer" className="btn-wa" style={{ marginTop: 16, justifyContent: "center" }}>
-                 Get Early Access
+                Get Early Access
               </a>
             </div>
           </div>
@@ -292,74 +376,47 @@ export default function HomePage() {
       <div className="divider" />
 
       {/* ── WHY ME ── */}
-      <section style={{ padding: "100px 24px" }}>
+      <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up" style={{ marginBottom: 60 }}>
+          <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
             <div className="section-tag">Why Choose Us</div>
-            <h2 className="font-display" style={{ fontSize: "clamp(32px,4vw,52px)", fontWeight: 800, letterSpacing: "-0.03em" }}>
-              Not Just Developers.<br /><span className="grad-text">Your Growth Partner.</span>
+            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em" }}>
+              Not just developers. <span className="grad-text">Your growth partner.</span>
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 20, perspective: 1000 }}>
             {FEATURES.map((f, i) => (
-  <div key={i} className="stat-card glass fade-up">
-    
-    {/* Icon */}
-    <div style={{ marginBottom: 16, color: "var(--purple-g)" }}>
-      {f.icon}
-    </div>
-
-    {/* Title */}
-    <h3
-      className="font-display"
-      style={{
-        fontSize: 18,
-        fontWeight: 700,
-        marginBottom: 8
-      }}
-    >
-      {f.title}
-    </h3>
-
-    {/* Description */}
-    <p
-      style={{
-        fontSize: 14,
-        color: "var(--muted)",
-        lineHeight: 1.6
-      }}
-    >
-      {f.desc}
-    </p>
-
-  </div>
-))}
+              <div key={i} className={`stat-card glass tilt-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`} style={{ textAlign: "left" }}>
+                <div style={{ marginBottom: 16, color: "var(--purple)" }}>{f.icon}</div>
+                <h3 className="font-display" style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{f.title}</h3>
+                <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>{f.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <div className="divider" />
-
       {/* ── CTA BANNER ── */}
-      <section style={{ padding: "100px 24px" }}>
+      <section style={{ padding: "0 24px 70px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up" style={{ position: "relative", borderRadius: 24, overflow: "hidden", padding: "60px 48px", background: "linear-gradient(135deg,rgba(124,58,237,0.2) 0%,rgba(7,7,9,0.9) 60%,rgba(16,185,129,0.1) 100%)", border: "1px solid rgba(139,92,246,0.25)", textAlign: "center" }}>
-            <div className="orb" style={{ width: 300, height: 300, background: "rgba(124,58,237,0.15)", top: -100, left: "50%", transform: "translateX(-50%)" }} />
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <h2 className="font-display" style={{ fontSize: "clamp(28px,4vw,48px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 16 }}>
-                Ready to <span className="grad-text">Build Something Great?</span>
-              </h2>
-              <p style={{ color: "var(--muted)", fontSize: 16, maxWidth: 480, margin: "0 auto 36px" }}>
-                Let's talk about your project. First consultation is free — no pressure, just a real conversation.
-              </p>
-              <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-                <button className="btn-primary" style={{ fontSize: 16, padding: "16px 32px" }} onClick={() => navigate("/contact")}>
-                   Book Free Call
-                </button>
-                <a href="https://wa.me/919035477754" target="_blank" rel="noreferrer" className="btn-wa" style={{ fontSize: 16, padding: "16px 32px" }}>
-                   WhatsApp Now
-                </a>
-              </div>
+          <div className="fade-up dir-left" style={{ borderRadius: 20, padding: "64px 48px", background: "var(--text)", textAlign: "center" }}>
+            <h2 className="font-display" style={{ fontSize: "clamp(26px,3.6vw,40px)", fontWeight: 800, letterSpacing: "-0.025em", marginBottom: 16, color: "#fff" }}>
+              Ready to build something great?
+            </h2>
+            <p style={{ color: "#aab3c2", fontSize: 16, maxWidth: 480, margin: "0 auto 36px" }}>
+              Let's talk about your project. The first consultation is free — no pressure, just a real conversation.
+            </p>
+            <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+              <button
+                className="btn-primary"
+                style={{ fontSize: 16, padding: "15px 30px", background: "#fff", color: "var(--text)", border: "1px solid #fff" }}
+                onClick={() => navigate("/contact")}
+              >
+                Book Free Call
+              </button>
+              <a href="https://wa.me/919035477754" target="_blank" rel="noreferrer" className="btn-wa" style={{ fontSize: 16, padding: "15px 30px" }}>
+                WhatsApp Now
+              </a>
             </div>
           </div>
         </div>

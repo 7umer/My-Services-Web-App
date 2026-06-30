@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useFadeUp } from "../hooks/useScrolled";
 import { FaWhatsapp, FaEnvelope, FaClock } from "react-icons/fa";
+import { CheckCircle2 } from "lucide-react";
 
 export default function ContactPage() {
   const location = useLocation();
@@ -70,7 +71,7 @@ export default function ContactPage() {
     <div style={{ paddingTop: 100 }}>
       <section style={{ padding: "80px 24px 60px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 60 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 60 }}>
 
             {/* Left info */}
             <div className="fade-up">
@@ -89,10 +90,10 @@ export default function ContactPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 40 }}>
                 {[
                    [<FaWhatsapp size={22} color="#25D366" />, "WhatsApp (Fastest)", "+91 9035477754", "https://wa.me/919035477754"],
-                   [<FaEnvelope size={22} color="#6b21a8" />, "Email", "um7websolutions@gmail.com", "mailto:um7websolutions@gmail.com"],
-                   [<FaClock size={22} color="#fbbf24" />, "Response Time", "Within 24 hours", null],
+                   [<FaEnvelope size={22} color="#15359e" />, "Email", "um7websolutions@gmail.com", "mailto:um7websolutions@gmail.com"],
+                   [<FaClock size={22} color="#b6802a" />, "Response Time", "Within 24 hours", null],
                 ].map(([icon, label, value, href]) => (
-                  <div key={label} style={{ display: "flex", alignItems: "center", gap: 16, padding: 16, borderRadius: 12, background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)" }}>
+                  <div key={label} style={{ display: "flex", alignItems: "center", gap: 16, padding: 16, borderRadius: 12, background: "rgba(16,25,43,0.03)", border: "1px solid var(--border)" }}>
                     <div style={{ fontSize: 22, width: 40, textAlign: "center" }}>{icon}</div>
                     <div>
                       <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 2 }}>{label}</div>
@@ -113,7 +114,9 @@ export default function ContactPage() {
             <div className="fade-up glass" style={{ padding: 40 }}>
               {sent ? (
                 <div style={{ textAlign: "center", padding: "40px 0" }}>
-                  <div style={{ fontSize: 56, marginBottom: 20 }}>✅</div>
+                  <div style={{ color: "var(--accent)", marginBottom: 18, display: "flex", justifyContent: "center" }}>
+                  <CheckCircle2 size={48} />
+                </div>
                   <h3 className="font-display" style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Message Sent!</h3>
                   <p style={{ color: "var(--muted)" }}>We'll get back to you within 24 hours. You can also WhatsApp us for a faster response.</p>
                   <button className="btn-ghost" style={{ marginTop: 24 }} onClick={() => { setSent(false); setForm({ name: "", email: "", service: "", message: "" }); }}>

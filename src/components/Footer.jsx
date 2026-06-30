@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/um-web-solutions-logo-full.png";
 
 const PAGES = ["Home", "Services", "Products", "Pricing", "Contact"];
 
@@ -26,14 +27,11 @@ export default function Footer() {
         >
           {/* Brand */}
           <div style={{ maxWidth: 300 }}>
-            <div
-              className="font-display"
-              style={{ fontSize: 22, fontWeight: 800, marginBottom: 12 }}
-            >
-              <span>UM </span>
-              <span className="grad-text">Web Solutions</span>
-              <span style={{ color: "var(--purple)" }}>.</span>
-            </div>
+            <img
+              src={logo}
+              alt="UM Web Solutions"
+              style={{ height: 38, width: "auto", display: "block", marginBottom: 14 }}
+            />
             <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.7 }}>
               Building premium web products and SaaS solutions for businesses
               that want to grow.
@@ -108,7 +106,7 @@ export default function Footer() {
                 rel="noreferrer"
                 style={{
                   display: "block",
-                  color: "var(--green)",
+                  color: "var(--purple)",
                   textDecoration: "none",
                   fontSize: 14,
                   marginBottom: 10,
