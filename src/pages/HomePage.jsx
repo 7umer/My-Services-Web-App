@@ -1,3 +1,11 @@
+import medrouteImg from "../assets/medroute-preview.png";
+import quikmartImg from "../assets/quikmart-preview.png";
+import hardlineImg from "../assets/hardline-preview.png";
+import dentalImg from "../assets/dental-preview.png";
+import skinImg from "../assets/skin-preview.png";
+import genImg from "../assets/gen-preview.png";
+
+
 import { useFadeUp } from "../hooks/useScrolled";
 import { SERVICES } from "../constants/services";
 import { useState, useEffect, useRef } from "react";
@@ -7,7 +15,56 @@ import { ImageIcon, ShieldCheck } from "lucide-react";
 
 const TECH_STACK = ["React", "Django", "PostgreSQL", "Supabase", "Tailwind CSS", "Figma"];
 
-const PORTFOLIO_PLACEHOLDERS = [1, 2, 3];
+const PORTFOLIO_PROJECTS = [
+  {
+    title: "MedRoute",
+    tag: "SaaS · Pharma CRM",
+    desc: "Smart visit management platform for medical representatives — doctor routing, visit logs, sampling, and analytics. Full production deployment with Web app.",
+    stack: ["React", "Django", "PostgreSQL", "Supabase", "Razorpay"],
+    url: "https://med-route-snowy.vercel.app",
+    image: medrouteImg, // add: import medrouteImg from "../assets/medroute-preview.png"
+  },
+  {
+    title: "QuickMart",
+    tag: "Startup · Hyperlocal Delivery",
+    desc: "10–15 minute grocery delivery platform connecting customers with trusted local stores in Gulbarga. WhatsApp-based ordering, rider recruitment, zero hidden fees.",
+    stack: ["HTML", "CSS", "JavaScript"],
+    url: "https://quikmart.vercel.app",
+    image: quikmartImg,
+  },
+  {
+    title: "Hardline Gym",
+    tag: "Client Website · Fitness",
+    desc: "Premium gym website with membership plans, trainer profiles, class schedules, and a bold editorial aesthetic built to convert walk-in visitors.",
+    stack: ["React", "Tailwind CSS"],
+    url: "https://hardline-phi.vercel.app",
+    image: hardlineImg,
+  },
+  {
+    title: "Dental Clinic Demo",
+    tag: "Demo · Healthcare",
+    desc: "Clean, trust-led dental clinic website showcasing services, doctor profiles, appointment booking CTA, and patient testimonials. Ready to white-label for any clinic.",
+    stack: ["React", "Tailwind CSS"],
+    url: "https://demo-dental-web.vercel.app",
+    image: dentalImg,
+  },
+  {
+    title: "Skin Clinic Demo",
+    tag: "Demo · Healthcare",
+    desc: "Dermatology clinic website with a premium light aesthetic — treatment listings, before/after showcase section, and a contact form with WhatsApp integration.",
+    stack: ["React", "Tailwind CSS"],
+    url: "https://skin-clinic-demo.vercel.app",
+    image: skinImg,
+  },
+  {
+    title: "General Clinic Demo",
+    tag: "Demo · Healthcare",
+    desc: "General practice clinic template with doctor availability display, service categories, patient FAQ, and a fully responsive mobile layout.",
+    stack: ["React", "Tailwind CSS"],
+    url: "https://gen-clinic-demo.vercel.app",
+    image: genImg,
+  },
+];
 
 export default function HomePage() {
   // `start` gates the counter so it only begins once the stats section has
@@ -291,7 +348,7 @@ export default function HomePage() {
 
       <div className="divider" />
 
-      {/* ── PORTFOLIO (placeholder — replace with real projects) ──
+      {/* ── PORTFOLIO (real projects) ── */}
       <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div className="fade-up dir-left" style={{ marginBottom: 56 }}>
@@ -300,30 +357,45 @@ export default function HomePage() {
               Recent <span className="grad-text">work</span>
             </h2>
             <p style={{ color: "var(--muted)", fontSize: 15 }}>
-              Case studies coming soon — these cards are placeholders, ready to swap for real projects and screenshots.
+              A selection of live projects — client sites, startup builds, and our own SaaS products.
             </p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 20, perspective: 1000 }}>
-            {PORTFOLIO_PLACEHOLDERS.map((n, i) => (
-              <div key={n} className={`portfolio-card tilt-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`}>
-                <div className="portfolio-thumb">
-                  <ImageIcon size={28} />
+            {PORTFOLIO_PROJECTS.map((project, i) => (
+              <div key={i} className={`portfolio-card tilt-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`}>
+
+                {/* Thumbnail — set project.image to an imported asset to show a real screenshot */}
+                <div className="portfolio-thumb" style={{ position: "relative", overflow: "hidden" }}>
+                  {project.image
+                    ? <img src={project.image} alt={project.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    : <ImageIcon size={28} />
+                  }
                 </div>
+
                 <div style={{ padding: 22 }}>
                   <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--faint)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                    Project {n}
+                    {project.tag}
                   </span>
-                  <h3 className="font-display" style={{ fontSize: 17, fontWeight: 700, margin: "6px 0 8px" }}>Project Name</h3>
-                  <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.6, marginBottom: 16 }}>
-                    Add a short description of the project, the problem it solved, and the stack used.
-                  </p>
-                  <span style={{ fontSize: 13, color: "var(--faint)", fontWeight: 600 }}>View Website →</span>
+                  <h3 className="font-display" style={{ fontSize: 17, fontWeight: 700, margin: "6px 0 8px" }}>{project.title}</h3>
+                  <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.6, marginBottom: 14 }}>{project.desc}</p>
+
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
+                    {project.stack.map((t) => (
+                      <span key={t} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, padding: "3px 8px", borderRadius: 5, background: "var(--bg2)", color: "var(--muted)" }}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <a href={project.url} target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "var(--purple)", fontWeight: 600, textDecoration: "none" }}>
+                    View Website →
+                  </a>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </section> */}
+      </section>
 
       <div className="divider" />
 
