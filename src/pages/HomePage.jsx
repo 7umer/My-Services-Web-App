@@ -5,6 +5,7 @@ import dentalImg from "../assets/dental-preview.png";
 import skinImg from "../assets/skin-preview.png";
 import genImg from "../assets/gen-preview.png";
 
+import heroimage from "../assets/hero-image.png";
 
 import { useFadeUp } from "../hooks/useScrolled";
 import { SERVICES } from "../constants/services";
@@ -13,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { FEATURES } from "../constants/features";
 import { ImageIcon, ShieldCheck } from "lucide-react";
 
-const TECH_STACK = ["React", "Django", "PostgreSQL", "Supabase", "Tailwind CSS", "Figma"];
+// const TECH_STACK = ["React", "Django", "PostgreSQL", "Supabase", "Tailwind CSS", "Figma"];
 
 const PORTFOLIO_PROJECTS = [
   {
@@ -133,7 +134,7 @@ export default function HomePage() {
           Free to use under the Unsplash License. */}
       <div style={{ position: "relative", width: "100%", minHeight: "clamp(560px, 78vw, 760px)", overflow: "hidden", background: "linear-gradient(135deg, #1a2540, #0b1220)" }}>
         <img
-          src="https://images.unsplash.com/photo-1753715613434-9c7cb58876b9?fm=jpg&q=80&w=2400&auto=format&fit=crop"
+          src={heroimage}
           alt="Programmer coding at a desk with several monitors"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           onError={(e) => { e.currentTarget.style.display = "none"; }}
@@ -176,7 +177,7 @@ export default function HomePage() {
             </a>
           </div>
 
-          <div className="fade-up dir-left" style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
+          {/* <div className="fade-up dir-left" style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
             {TECH_STACK.map((t) => (
               <span key={t} style={{
                 fontFamily: "JetBrains Mono, monospace",
@@ -189,7 +190,7 @@ export default function HomePage() {
                 {t}
               </span>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
 
