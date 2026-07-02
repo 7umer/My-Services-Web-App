@@ -4,7 +4,6 @@ import hardlineImg from "../assets/hardline-preview.png";
 import dentalImg from "../assets/dental-preview.png";
 import skinImg from "../assets/skin-preview.png";
 import genImg from "../assets/gen-preview.png";
-
 import heroimage from "../assets/hero-image.png";
 
 import { useFadeUp } from "../hooks/useScrolled";
@@ -14,16 +13,14 @@ import { useNavigate } from "react-router-dom";
 import { FEATURES } from "../constants/features";
 import { ImageIcon, ShieldCheck } from "lucide-react";
 
-// const TECH_STACK = ["React", "Django", "PostgreSQL", "Supabase", "Tailwind CSS", "Figma"];
-
 const PORTFOLIO_PROJECTS = [
   {
     title: "MedRoute",
     tag: "SaaS · Pharma CRM",
-    desc: "Smart visit management platform for medical representatives — doctor routing, visit logs, sampling, and analytics. Full production deployment with Web app.",
+    desc: "Smart visit management platform for medical representatives — doctor routing, visit logs, sampling, and analytics. Full production deployment with mobile app.",
     stack: ["React", "Django", "PostgreSQL", "Supabase", "Razorpay"],
     url: "https://med-route-snowy.vercel.app",
-    image: medrouteImg, // add: import medrouteImg from "../assets/medroute-preview.png"
+    image: medrouteImg,
   },
   {
     title: "QuickMart",
@@ -68,10 +65,6 @@ const PORTFOLIO_PROJECTS = [
 ];
 
 export default function HomePage() {
-  // `start` gates the counter so it only begins once the stats section has
-  // actually scrolled into view, instead of finishing instantly on mount
-  // (which is why it used to look like a static number by the time anyone
-  // scrolled down to it).
   const useCounter = (end, start, duration = 2000) => {
     const [count, setCount] = useState(0);
     useEffect(() => {
@@ -97,7 +90,6 @@ export default function HomePage() {
 
   const [isIndia, setIsIndia] = useState(true);
 
-  // Trigger the count-up only once the trust band scrolls into view.
   const statsRef = useRef(null);
   const [statsInView, setStatsInView] = useState(false);
 
@@ -129,9 +121,6 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* ── HERO PHOTO BANNER (text overlaid on the image) ──
-          Photo by Jakub Żerdzicki on Unsplash (unsplash.com/photos/bWVBCDtTRJI)
-          Free to use under the Unsplash License. */}
       <div style={{ position: "relative", width: "100%", minHeight: "clamp(560px, 78vw, 760px)", overflow: "hidden", background: "linear-gradient(135deg, #1a2540, #0b1220)" }}>
         <img
           src={heroimage}
@@ -141,7 +130,7 @@ export default function HomePage() {
         />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(11,18,32,0.78) 0%, rgba(11,18,32,0.6) 45%, rgba(11,18,32,0.82) 100%)" }} />
 
-        <div style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto", padding: "150px 24px 70px", width: "100%", textAlign: "center" }}>
+        <div className="hero-inner" style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto", padding: "150px 24px 70px", width: "100%", textAlign: "center" }}>
           <div className="fade-up dir-left" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             padding: "7px 14px", borderRadius: 100,
@@ -163,55 +152,34 @@ export default function HomePage() {
             made by a real engineering team.
           </p>
           <div className="fade-up dir-right" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 36, justifyContent: "center" }}>
-            <button className="btn-primary" onClick={() => navigate("/contact")}>
+            <button className="btn-primary cta-shine" onClick={() => navigate("/contact")}>
               Get a Free Quote
             </button>
             <a
               href="https://wa.me/919035477754?text=Hi%2C+I+want+to+discuss+a+project!"
               target="_blank"
               rel="noreferrer"
-              className="btn-ghost"
+              className="btn-ghost cta-shine-ghost"
               style={{ borderColor: "rgba(255,255,255,0.3)", color: "#fff" }}
             >
               Contact Us
             </a>
           </div>
-
-          {/* <div className="fade-up dir-left" style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
-            {TECH_STACK.map((t) => (
-              <span key={t} style={{
-                fontFamily: "JetBrains Mono, monospace",
-                fontSize: 12.5,
-                color: "#c5cbd6",
-                border: "1px solid rgba(255,255,255,0.18)",
-                borderRadius: 6,
-                padding: "5px 10px",
-              }}>
-                {t}
-              </span>
-            ))}
-          </div> */}
         </div>
       </div>
 
-      {/* ── HERO MOCKUP + QUICK SERVICES (white, below the photo) ── */}
       <section style={{ paddingTop: 0, paddingBottom: 70, position: "relative", overflow: "hidden" }}>
         <div className="grid-bg" />
-
-        {/* Dashboard mockup — its own showcase row, fully below the hero text */}
         <div style={{ maxWidth: 620, margin: "56px auto 0", padding: "0 24px", position: "relative", zIndex: 1 }}>
           <div className="fade-up dir-left demo-mockup" style={{ position: "relative" }}>
             <div style={{ background: "#fff", border: "1px solid var(--border)", borderRadius: 16, padding: 18, boxShadow: "0 0 0 1px rgba(16,25,43,0.04), 0 0 70px rgba(0,0,0,0.35), 0 25px 50px rgba(0,0,0,0.25)", position: "relative", overflow: "hidden" }}>
-              {/* Simulated cursor */}
               <div className="demo-cursor demo-anim" />
-              {/* Browser chrome */}
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
                 {["#c0392b", "#b6802a", "#0e8f86"].map((c) => (
                   <div key={c} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />
                 ))}
                 <div style={{ flex: 1, background: "var(--bg2)", borderRadius: 6, height: 20, marginLeft: 10 }} />
               </div>
-              {/* Dashboard */}
               <div style={{ background: "var(--bg2)", borderRadius: 10, padding: 16, border: "1px solid var(--border)" }}>
                 <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--muted)", marginBottom: 12, letterSpacing: "0.04em" }}>
                   CLINIC SAAS — DASHBOARD
@@ -245,7 +213,6 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            {/* Floating badge */}
             <div style={{ position: "absolute", bottom: -14, left: -14, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: "9px 14px", boxShadow: "0 10px 24px rgba(16,25,43,0.1)", display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ color: "#0e8f86", fontSize: 16 }}>✓</span>
               <span style={{ fontSize: 12.5, color: "var(--text)", fontWeight: 600 }}>Clinic SaaS — Live Preview</span>
@@ -256,7 +223,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Quick services row */}
         <div style={{ maxWidth: 1200, margin: "64px auto 0", padding: "32px 24px 0", borderTop: "1px solid var(--border)" }}>
           <div className="fade-up dir-right" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 24 }}>
             {SERVICES.slice(0, 4).map((s, i) => (
@@ -271,7 +237,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── TRUST / STATS BAND (dark) ── */}
       <section style={{ padding: "0 24px 90px" }}>
         <div className="fade-up dir-left trust-band" style={{ maxWidth: 1200, margin: "0 auto", background: "#121619", borderRadius: 18, padding: "48px 40px" }}>
           <div style={{ maxWidth: 640, marginBottom: 40 }}>
@@ -282,8 +247,6 @@ export default function HomePage() {
               to the person actually building it.
             </p>
           </div>
-
-          {/* 4 equal boxes — CSS Grid, repeat(4, 1fr) */}
           <div className="stats-grid" ref={statsRef}>
             <div className="stat-box">
               <div className="font-display stat-box-num">{projects}+</div>
@@ -298,7 +261,6 @@ export default function HomePage() {
               <p>Avg. Response Time</p>
             </div>
             <div className="stat-box logo-box">
-              {/* Spinning trust badge — pure CSS/SVG, no image asset needed */}
               <div className="trust-badge" aria-hidden="true">
                 <svg className="trust-badge-ring" viewBox="0 0 120 120">
                   <path id="badgeCirclePath" fill="none" d="M60,60 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0" />
@@ -317,7 +279,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── SERVICES PREVIEW ── */}
       <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
@@ -349,7 +310,6 @@ export default function HomePage() {
 
       <div className="divider" />
 
-      {/* ── PORTFOLIO (real projects) ── */}
       <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div className="fade-up dir-left" style={{ marginBottom: 56 }}>
@@ -364,22 +324,18 @@ export default function HomePage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 20, perspective: 1000 }}>
             {PORTFOLIO_PROJECTS.map((project, i) => (
               <div key={i} className={`portfolio-card tilt-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`}>
-
-                {/* Thumbnail — set project.image to an imported asset to show a real screenshot */}
                 <div className="portfolio-thumb" style={{ position: "relative", overflow: "hidden" }}>
                   {project.image
                     ? <img src={project.image} alt={project.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     : <ImageIcon size={28} />
                   }
                 </div>
-
                 <div style={{ padding: 22 }}>
                   <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--faint)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                     {project.tag}
                   </span>
                   <h3 className="font-display" style={{ fontSize: 17, fontWeight: 700, margin: "6px 0 8px" }}>{project.title}</h3>
                   <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.6, marginBottom: 14 }}>{project.desc}</p>
-
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
                     {project.stack.map((t) => (
                       <span key={t} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, padding: "3px 8px", borderRadius: 5, background: "var(--bg2)", color: "var(--muted)" }}>
@@ -387,7 +343,6 @@ export default function HomePage() {
                       </span>
                     ))}
                   </div>
-
                   <a href={project.url} target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "var(--purple)", fontWeight: 600, textDecoration: "none" }}>
                     View Website →
                   </a>
@@ -400,7 +355,6 @@ export default function HomePage() {
 
       <div className="divider" />
 
-      {/* ── SAAS HIGHLIGHT ── */}
       <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
@@ -448,7 +402,6 @@ export default function HomePage() {
 
       <div className="divider" />
 
-      {/* ── WHY ME ── */}
       <section style={{ padding: "90px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
@@ -469,10 +422,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA BANNER ── */}
       <section style={{ padding: "0 24px 70px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up dir-left" style={{ borderRadius: 20, padding: "64px 48px", background: "var(--text)", textAlign: "center" }}>
+          <div className="fade-up dir-left cta-banner-inner" style={{ borderRadius: 20, padding: "64px 48px", background: "var(--text)", textAlign: "center" }}>
             <h2 className="font-display" style={{ fontSize: "clamp(26px,3.6vw,40px)", fontWeight: 800, letterSpacing: "-0.025em", marginBottom: 16, color: "#fff" }}>
               Ready to build something great?
             </h2>

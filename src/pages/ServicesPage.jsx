@@ -109,11 +109,11 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          {/* Steps — vertical timeline on desktop, stacked on mobile */}
-          <div style={{ position: "relative", maxWidth: 860, margin: "0 auto" }}>
+          {/* Steps — vertical timeline on desktop, left-aligned stack on mobile */}
+          <div className="process-timeline" style={{ position: "relative", maxWidth: 860, margin: "0 auto" }}>
 
-            {/* Vertical connector line */}
-            <div style={{
+            {/* Vertical connector line — hidden on mobile via CSS */}
+            <div className="process-line" style={{
               position: "absolute",
               left: "50%",
               top: 0,
@@ -122,7 +122,6 @@ export default function ServicesPage() {
               background: "linear-gradient(to bottom, var(--purple), var(--accent), var(--purple))",
               opacity: 0.15,
               transform: "translateX(-50%)",
-              display: "var(--timeline-line, block)",
             }} />
 
             {PROCESS_STEPS.map((step, i) => {
@@ -130,7 +129,7 @@ export default function ServicesPage() {
               return (
                 <div
                   key={i}
-                  className={`fade-up ${isLeft ? "dir-left" : "dir-right"}`}
+                  className={`process-row fade-up ${isLeft ? "dir-left" : "dir-right"}`}
                   style={{
                     display: "flex",
                     alignItems: "flex-start",
@@ -141,7 +140,7 @@ export default function ServicesPage() {
                 >
                   {/* Card */}
                   <div
-                    className="glass"
+                    className="glass process-card"
                     style={{
                       flex: "0 1 calc(50% - 48px)",
                       padding: "28px 30px",
@@ -150,7 +149,6 @@ export default function ServicesPage() {
                       overflow: "hidden",
                     }}
                   >
-                    {/* Subtle tinted top bar */}
                     <div style={{
                       position: "absolute",
                       top: 0, left: 0, right: 0,
@@ -159,12 +157,7 @@ export default function ServicesPage() {
                       borderRadius: "14px 14px 0 0",
                     }} />
 
-                    <div style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 10,
-                      marginBottom: 14,
-                    }}>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                       <div style={{
                         width: 40, height: 40,
                         borderRadius: 10,
@@ -186,15 +179,14 @@ export default function ServicesPage() {
                     </p>
                   </div>
 
-                  {/* Centre dot on the timeline */}
-                  <div style={{
+                  {/* Centre dot */}
+                  <div className="process-dot-col" style={{
                     flexShrink: 0,
                     width: 48,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                     paddingTop: 18,
-                    gap: 0,
                   }}>
                     <div style={{
                       width: 14,
@@ -207,8 +199,8 @@ export default function ServicesPage() {
                     }} />
                   </div>
 
-                  {/* Empty half — keeps alternating layout */}
-                  <div style={{ flex: "0 1 calc(50% - 48px)" }} />
+                  {/* Empty half */}
+                  <div className="process-spacer" style={{ flex: "0 1 calc(50% - 48px)" }} />
                 </div>
               );
             })}
@@ -219,7 +211,7 @@ export default function ServicesPage() {
       {/* ── CTA ── */}
       <section style={{ padding: "0 24px 80px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up dir-left" style={{
+          <div className="fade-up dir-left cta-banner-inner" style={{
             borderRadius: 20, padding: "64px 48px",
             background: "var(--text)", textAlign: "center",
           }}>

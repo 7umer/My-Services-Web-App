@@ -18,7 +18,6 @@ export default function StickyContactBar() {
     setIsTouch(window.matchMedia("(hover: none)").matches);
   }, []);
 
-  // Tap outside closes an open item on touch devices
   useEffect(() => {
     if (!isTouch) return;
     const handleOutside = (e) => {
@@ -44,33 +43,21 @@ export default function StickyContactBar() {
   };
 
   return (
-    <>
-      {/* Right side: Email / Call / Inquiry — expand-on-hover-or-tap */}
-      <div className="sticky-contact-bar" ref={wrapRef}>
-        {ITEMS.map((item, i) => (
-          <a
-            key={item.label}
-            href={item.href}
-            className={`contact-item ${openIndex === i ? "open" : ""}`}
-            title={item.label}
-            onClick={(e) => handleClick(e, item, i)}
-            onMouseEnter={() => !isTouch && setOpenIndex(i)}
-            onMouseLeave={() => !isTouch && setOpenIndex(null)}
-          >
-            <item.icon size={20} className="contact-item-icon" />
-            <span className="contact-item-label">{item.label}</span>
-          </a>
-        ))}
-      </div>
-
-      {/* Left side: vertical "Contact Us" tab — always links straight to /contact */}
-      <button
-        className="left-contact-tab"
-        onClick={() => navigate("/contact")}
-        aria-label="Contact Us"
-      >
-        Contact Us
-      </button>
-    </>
+    <div className="sticky-contact-bar" ref={wrapRef}>
+      {ITEMS.map((item, i) => (
+        <a
+          key={item.label}
+          href={item.href}
+          className={`contact-item ${openIndex === i ? "open" : ""}`}
+          title={item.label}
+          onClick={(e) => handleClick(e, item, i)}
+          onMouseEnter={() => !isTouch && setOpenIndex(i)}
+          onMouseLeave={() => !isTouch && setOpenIndex(null)}
+        >
+          <item.icon size={20} className="contact-item-icon" />
+          <span className="contact-item-label">{item.label}</span>
+        </a>
+      ))}
+    </div>
   );
 }

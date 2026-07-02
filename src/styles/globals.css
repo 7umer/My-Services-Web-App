@@ -22,6 +22,7 @@
      --bg3: #eef1f6;
      --card: #ffffff;
      --card-b: rgba(16, 25, 43, 0.07);
+     
    
      /* ── brand ── */
      --purple: #2454d8;       /* primary — trust blue */
@@ -43,6 +44,7 @@
    
    html {
      scroll-behavior: smooth;
+     overflow-x: hidden;
    }
    
    body {
@@ -101,9 +103,8 @@
      margin-bottom: 14px;
    }
    .section-tag::before {
-     content: "//";
-     color: var(--faint);
-     font-weight: 600;
+     content: "";
+     display: none;
    }
    
    .divider {
@@ -514,7 +515,7 @@
    .fade-up {
      opacity: 0;
      transform: translateY(20px);
-     transition: opacity 1.4s ease, transform 1.4s ease;
+     transition: opacity 0.9s ease, transform 0.9s ease;
    }
    .fade-up.visible {
      opacity: 1;
@@ -540,10 +541,10 @@
      transform: translateX(0);
    }
    
-   /* @media (max-width: 768px) { */
+   @media (max-width: 768px) {
      /* side-slides feel cramped on narrow screens — keep mobile reveals
         as a simple vertical rise instead */
-     /* .fade-up.dir-left,
+     .fade-up.dir-left,
      .fade-up.dir-right {
        transform: translateY(20px);
      }
@@ -551,7 +552,7 @@
      .fade-up.dir-right.visible {
        transform: translateY(0);
      }
-   } */
+   }
    
    .slide-left, .slide-right {
      display: inline-block;
@@ -942,6 +943,7 @@
      z-index: 900;
      box-shadow: -2px -2px 8px rgba(16, 25, 43, 0.12);
      transition: background-color 0.2s ease, padding-left 0.2s ease;
+     overflow: hidden;
    }
    
    .left-contact-tab:hover {
@@ -953,5 +955,230 @@
      .left-contact-tab {
        padding: 14px 8px;
        font-size: 12.5px;
+     }
+   }
+
+   /* ── Shine sweep — right contact bar items ──
+      A translucent highlight glints across each button on a staggered
+      loop, drawing the eye without moving the layout at all.
+      Works because .contact-item already has overflow: hidden. */
+   .contact-item {
+     position: relative;
+     overflow: hidden;
+   }
+   .contact-item::after {
+     content: "";
+     position: absolute;
+     top: 0;
+     left: -120%;
+     width: 60%;
+     height: 100%;
+     background: linear-gradient(
+       100deg,
+       transparent 20%,
+       rgba(255, 255, 255, 0.28) 50%,
+       transparent 80%
+     );
+     animation: contactShine 3.2s ease-in-out infinite;
+     pointer-events: none;
+   }
+   /* Stagger each bar item so they don't all flash at once */
+   .contact-item:nth-child(1)::after { animation-delay: 0s; }
+   .contact-item:nth-child(2)::after { animation-delay: 0.55s; }
+   .contact-item:nth-child(3)::after { animation-delay: 1.1s; }
+
+   @keyframes contactShine {
+     0%        { left: -120%; }
+     35%, 100% { left: 160%; }
+   }
+
+   /* ── Shine sweep — left "Contact Us" tab ──
+      Same glint, rotated tab so the sweep runs along the vertical axis. */
+   .left-contact-tab {
+     position: relative;
+   }
+   .left-contact-tab::after {
+     content: "";
+     position: absolute;
+     top: -120%;
+     left: 0;
+     width: 100%;
+     height: 60%;
+     background: linear-gradient(
+       180deg,
+       transparent 20%,
+       rgba(255, 255, 255, 0.28) 50%,
+       transparent 80%
+     );
+     animation: leftTabShine 3.2s ease-in-out infinite;
+     animation-delay: 1.7s;
+     pointer-events: none;
+   }
+
+   @keyframes leftTabShine {
+     0%        { top: -120%; }
+     35%, 100% { top: 160%; }
+   }
+
+   /* ── Twinkle pulse — hero CTA buttons ──
+      A repeating glow ring that expands and fades, signalling
+      "clickable" without moving or blocking the button text. */
+   .cta-shine {
+     position: relative;
+     animation: ctaTwinkle 2.4s ease-in-out infinite;
+   }
+
+   @keyframes ctaTwinkle {
+     0%, 100% {
+       box-shadow: 0 1px 2px rgba(36, 84, 216, 0.08);
+     }
+     50% {
+       box-shadow:
+         0 0 0 5px rgba(36, 84, 216, 0.14),
+         0 0 18px rgba(36, 84, 216, 0.28);
+     }
+   }
+
+   /* Ghost variant on dark hero bg — white glow instead of blue */
+   .cta-shine-ghost {
+     animation: ctaTwinkleGhost 2.4s ease-in-out infinite;
+     animation-delay: 1.2s;
+   }
+
+   @keyframes ctaTwinkleGhost {
+     0%, 100% {
+       box-shadow: 0 1px 2px rgba(255, 255, 255, 0.06);
+     }
+     50% {
+       box-shadow:
+         0 0 0 5px rgba(255, 255, 255, 0.12),
+         0 0 18px rgba(255, 255, 255, 0.18);
+     }
+   }
+
+   @media (prefers-reduced-motion: reduce) {
+     .contact-item::after,
+     .left-contact-tab::after,
+     .cta-shine,
+     .cta-shine-ghost {
+       animation: none;
+     }
+   }
+
+   /* =====================================================================
+      MOBILE RESPONSIVENESS — Global fixes for homepage + services page
+      ===================================================================== */
+
+   @media (max-width: 768px) {
+
+     /* ── Homepage: trust band ── */
+     .trust-band {
+       padding: 32px 20px !important;
+       border-radius: 12px !important;
+     }
+
+     /* ── Homepage: hero section inner padding ── */
+     .hero-inner {
+       padding: 110px 16px 56px !important;
+     }
+
+     /* ── Homepage / global: dark CTA banners ── */
+     .cta-banner-inner {
+       padding: 40px 24px !important;
+       border-radius: 14px !important;
+     }
+
+     /* ── Homepage: SaaS highlight inner padding ── */
+     .saas-inner-left {
+       padding: 28px 24px !important;
+     }
+
+     /* ── Services page: hero heading ── */
+     .services-hero {
+       padding: 60px 16px 40px !important;
+     }
+
+     /* ── Process timeline: collapse to left-aligned vertical stack ── */
+     .process-line {
+       left: 20px !important;
+       transform: none !important;
+     }
+
+     .process-row {
+       flex-direction: column !important;
+       padding-left: 52px;
+       position: relative;
+     }
+
+     .process-card {
+       flex: 0 1 100% !important;
+       width: 100% !important;
+       min-width: 0 !important;
+     }
+
+     .process-dot-col {
+       position: absolute !important;
+       left: 12px !important;
+       top: 16px !important;
+       width: auto !important;
+       padding-top: 0 !important;
+     }
+
+     .process-spacer {
+       display: none !important;
+     }
+
+     /* ── General: reduce section vertical padding on mobile ── */
+     section {
+       padding-top: 60px !important;
+       padding-bottom: 60px !important;
+     }
+
+     /* ── General: cards shouldn't have min-width forcing overflow ── */
+     .service-card,
+     .portfolio-card,
+     .stat-card,
+     .glass {
+       min-width: 0 !important;
+     }
+
+     /* ── General: buttons should be full width on very small screens ── */
+     .btn-primary,
+     .btn-ghost,
+     .btn-wa {
+       width: 100%;
+       justify-content: center;
+     }
+   }
+
+   @media (max-width: 480px) {
+
+     /* ── Extra small screens: tighten horizontal padding ── */
+     .trust-band {
+       padding: 24px 16px !important;
+     }
+
+     /* ── Stat numbers slightly smaller ── */
+     .stat-box-num {
+       font-size: 26px !important;
+     }
+
+     /* ── Service cards: reduce inner padding ── */
+     .service-card {
+       padding: 20px 18px !important;
+     }
+
+     /* ── Portfolio card thumb height ── */
+     .portfolio-thumb {
+       height: 130px !important;
+     }
+
+     /* ── Process timeline tighter on very small ── */
+     .process-row {
+       padding-left: 44px;
+     }
+
+     .process-card {
+       padding: 20px 18px !important;
      }
    }
