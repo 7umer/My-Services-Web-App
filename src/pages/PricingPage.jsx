@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useFadeUp } from "../hooks/useScrolled";
@@ -25,6 +26,11 @@ export default function PricingPage() {
 
   return (
     <div style={{ paddingTop: 100 }}>
+      <SEO
+        title="Web Development Pricing India | Affordable Packages | UM Web Solutions"
+        description="Affordable web development pricing for businesses in India and worldwide. Get professional websites, SaaS products, and mobile apps starting from budget-friendly packages. Free consultation included."
+        path="/pricing"
+      />
       <section style={{ padding: "80px 24px 60px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           {/* Header */}

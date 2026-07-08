@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useFadeUp } from "../hooks/useScrolled";
 import { PRODUCTS } from "../constants/products";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +22,11 @@ export default function ProductsPage({ setActivePage }) {
 
   return (
     <div style={{ paddingTop: 100 }}>
+      <SEO
+        title="SaaS Products | Clinic Management System | UM Web Solutions"
+        description="UM Web Solutions builds SaaS products for Indian businesses. Our Clinic SaaS helps modern clinics manage patients, prescriptions, billing, and appointments at affordable prices."
+        path="/products"
+      />
       <section style={{ padding: "80px 24px 60px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           {/* Header */}

@@ -1,4 +1,6 @@
 import { useFadeUp } from "../hooks/useScrolled";
+import SEO from "../components/SEO";
+
 import { Phone, MessageSquare, FileText, Rocket } from "lucide-react";
 import {
   FYP_WHY_CHOOSE,
@@ -55,6 +57,11 @@ export default function FinalYearProjectPage() {
 
   return (
     <div style={{ paddingTop: 100 }}>
+      <SEO
+        title="Final Year Project Development | Expert Help | UM Web Solutions"
+        description="Get professional final year project development help from UM Web Solutions. We build industry-ready projects using React, Django, Python, Java, ML, AI and more. Based in Kalaburagi, Karnataka."
+        path="/final-year-project"
+      />
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section style={{ padding: "80px 24px 60px" }}>

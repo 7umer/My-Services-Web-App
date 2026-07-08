@@ -1,4 +1,9 @@
+import realEstateImg from "../assets/real-estate-preview.png";
+import makeupImg from "../assets/makeup-preview.png";
+
 import medrouteImg from "../assets/medroute-preview.png";
+import SEO from "../components/SEO";
+
 import quikmartImg from "../assets/quikmart-preview.png";
 import hardlineImg from "../assets/hardline-preview.png";
 import dentalImg from "../assets/dental-preview.png";
@@ -39,6 +44,22 @@ const PORTFOLIO_PROJECTS = [
     image: hardlineImg,
   },
   {
+    title: "Meridian Estates",
+    tag: "Demo · Luxury Real Estate",
+    desc: "Ultra-prime real estate website with animated property showcases, a 3D tower explorer, interactive market map, mortgage calculator, and cinematic scroll effects. Built with Next.js, Three.js, and GSAP.",
+    stack: ["Next.js", "Three.js", "GSAP", "Tailwind CSS"],
+    url: "https://real-estate-psi-mauve.vercel.app",
+    image: realEstateImg,
+  },
+  {
+    title: "Aanya Kapoor Makeup Artistry",
+    tag: "Client Website · Beauty",
+    desc: "Elegant portfolio site for a luxury bridal and editorial makeup artist — service listings, portfolio gallery, testimonials, pricing, and booking flow with a refined, photo-led aesthetic.",
+    stack: ["HTML", "CSS", "JavaScript"],
+    url: "https://makeup-artists-self.vercel.app",
+    image: makeupImg,
+  },
+  {
     title: "Dental Clinic Demo",
     tag: "Demo · Healthcare",
     desc: "Clean, trust-led dental clinic website showcasing services, doctor profiles, appointment booking CTA, and patient testimonials. Ready to white-label for any clinic.",
@@ -62,6 +83,7 @@ const PORTFOLIO_PROJECTS = [
     url: "https://gen-clinic-demo.vercel.app",
     image: genImg,
   },
+  
 ];
 
 export default function HomePage() {
@@ -121,6 +143,11 @@ export default function HomePage() {
 
   return (
     <div>
+      <SEO
+        title="Web Development Agency in Kalaburagi | UM Web Solutions"
+        description="UM Web Solutions is a professional web development agency in Kalaburagi, Karnataka. We build React, Django, and full-stack websites, SaaS products, and mobile apps for startups and businesses across India."
+        path="/"
+      />
       <div style={{ position: "relative", width: "100%", minHeight: "clamp(560px, 78vw, 760px)", overflow: "hidden", background: "linear-gradient(135deg, #1a2540, #0b1220)" }}>
         <img
           src={heroimage}

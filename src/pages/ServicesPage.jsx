@@ -1,4 +1,6 @@
 import { useFadeUp } from "../hooks/useScrolled";
+import SEO from "../components/SEO";
+
 import { SERVICES } from "../constants/services";
 
 const PROCESS_STEPS = [
@@ -44,6 +46,11 @@ export default function ServicesPage() {
 
   return (
     <div style={{ paddingTop: 100 }}>
+      <SEO
+        title="Web Development Services | React, Django, Full Stack | UM Web Solutions"
+        description="Explore our web development services: React frontends, Django backends, SaaS products, e-commerce, mobile apps, and UI/UX design. Based in Kalaburagi, serving clients across India and globally."
+        path="/services"
+      />
       {/* ── SERVICES GRID ── */}
       <section style={{ padding: "80px 24px 60px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>

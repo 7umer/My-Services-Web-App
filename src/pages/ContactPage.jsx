@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useFadeUp } from "../hooks/useScrolled";
@@ -69,6 +70,11 @@ export default function ContactPage() {
 
   return (
     <div style={{ paddingTop: 100 }}>
+      <SEO
+        title="Contact UM Web Solutions | Web Development Agency Kalaburagi"
+        description="Get in touch with UM Web Solutions, a web development agency in Kalaburagi, Karnataka. Contact us for a free consultation on your website, SaaS product, or mobile app project."
+        path="/contact"
+      />
       <section style={{ padding: "80px 24px 60px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 60 }}>
