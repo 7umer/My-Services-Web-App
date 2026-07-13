@@ -1,251 +1,187 @@
-import { useFadeUp } from "../hooks/useScrolled";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+
 import SEO from "../components/SEO";
+import { SplitHeading, Marquee } from "../components/Motion";
+import { useFadeUp } from "../hooks/useScrolled";
+import { usePageMotion, useMagnetic } from "../lib/motion";
 
 import { SERVICES } from "../constants/services";
+import servicesVisual from "../assets/services-visual.png";
 
 const PROCESS_STEPS = [
-  {
-    number: "01",
-    title: "Discovery & Analysis",
-    desc: "We start by understanding your business goals, challenges, and requirements through comprehensive analysis and stakeholder interviews.",
-    color: "#2454d8",
-    bg: "rgba(36,84,216,0.08)",
-  },
-  {
-    number: "02",
-    title: "Strategy & Planning",
-    desc: "Based on our findings, we develop a detailed project roadmap with clear milestones, timelines, and resource allocation.",
-    color: "#0e8f86",
-    bg: "rgba(14,143,134,0.08)",
-  },
-  {
-    number: "03",
-    title: "Design & Development",
-    desc: "Our expert team brings your vision to life using cutting-edge technologies and best practices in software development.",
-    color: "#b6802a",
-    bg: "rgba(182,128,42,0.08)",
-  },
-  {
-    number: "04",
-    title: "Testing & Quality Assurance",
-    desc: "Rigorous testing ensures your solution meets the highest standards of quality, performance, and security.",
-    color: "#c0392b",
-    bg: "rgba(192,57,43,0.08)",
-  },
-  {
-    number: "05",
-    title: "Deployment & Support",
-    desc: "We handle the deployment process and provide ongoing support to ensure your solution continues to perform optimally.",
-    color: "#2454d8",
-    bg: "rgba(36,84,216,0.08)",
-  },
+  { number: "01", title: "Discovery & Analysis",        desc: "We start by understanding your business goals, challenges, and requirements through comprehensive analysis and stakeholder interviews." },
+  { number: "02", title: "Strategy & Planning",         desc: "Based on our findings, we develop a detailed project roadmap with clear milestones, timelines, and resource allocation." },
+  { number: "03", title: "Design & Development",        desc: "Our expert team brings your vision to life using cutting-edge technologies and best practices in software development." },
+  { number: "04", title: "Testing & Quality Assurance", desc: "Rigorous testing ensures your solution meets the highest standards of quality, performance, and security." },
+  { number: "05", title: "Deployment & Support",        desc: "We handle the deployment process and provide ongoing support to ensure your solution continues to perform optimally." },
 ];
+
+const MARQUEE = ["React", "Django", "PostgreSQL", "Supabase", "Tailwind", "Celery"];
 
 export default function ServicesPage() {
   useFadeUp();
+  usePageMotion();
+
+  const ctaRef = useMagnetic(0.3);
+  const [active, setActive] = useState(0);
+  const panels = useRef([]);
+
+  /* sticky index highlights whichever panel is nearest mid-screen */
+  useEffect(() => {
+    const onScroll = () => {
+      const mid = window.innerHeight / 2;
+      let best = 0, bestD = Infinity;
+      panels.current.forEach((el, i) => {
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.top + r.height / 2 - mid);
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      setActive(best);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const jump = (i) =>
+    panels.current[i]?.scrollIntoView({ behavior: "smooth", block: "center" });
 
   return (
-    <div style={{ paddingTop: 100 }}>
+    <div>
       <SEO
         title="Web Development Services | React, Django, Full Stack | UM Web Solutions"
         description="Explore our web development services: React frontends, Django backends, SaaS products, e-commerce, mobile apps, and UI/UX design. Based in Kalaburagi, serving clients across India and globally."
         path="/services"
       />
-      {/* ── SERVICES GRID ── */}
-      <section style={{ padding: "80px 24px 60px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
 
-          <div className="fade-up dir-left" style={{ marginBottom: 80 }}>
-            <div className="section-tag">Services</div>
-            <h1 className="font-display" style={{ fontSize: "clamp(36px,5vw,64px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 16 }}>
-              Everything You Need to<br /><span className="grad-text">Build &amp; Grow Online</span>
-            </h1>
-            <p style={{ color: "var(--muted)", fontSize: 18, maxWidth: 540 }}>
-              From a simple landing page to a full SaaS platform — We handle the entire build so you can focus on your business.
-            </p>
-          </div>
+      {/* ── HERO ── */}
+      <header className="wrap page-head svc-head">
+        <div>
+          <span className="section-tag">Services</span>
+          <h1 className="font-display page-title">
+            <span className="line"><span>Everything</span></span>
+            <span className="line"><span className="stroke-text">you need to</span></span>
+            <span className="line"><span className="red-text">build &amp; grow</span></span>
+          </h1>
+          <p className="page-lead">
+            From a simple landing page to a full SaaS platform — we handle the entire build so
+            you can focus on your business.
+          </p>
+        </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))", gap: 24 }}>
+        <figure className="svc-hero-art">
+          <img src={servicesVisual} alt="UM Web Solutions — premium web development" loading="lazy" />
+          <figcaption>{String(SERVICES.length).padStart(2, "0")} Services</figcaption>
+        </figure>
+      </header>
+
+      <Marquee words={MARQUEE} speed={2.1} />
+
+      {/* ── STICKY INDEX + SERVICE PANELS ── */}
+      <section className="wrap section">
+        <div className="svc-split">
+          <aside className="svc-index">
+            <div className="section-tag">Index</div>
             {SERVICES.map((s, i) => (
-              <div key={i} className={`fade-up service-card ${i % 2 === 0 ? "dir-left" : "dir-right"}`}>
-                <div style={{ padding: "28px 28px 0", background: `linear-gradient(135deg,${s.color}0d 0%,transparent 100%)` }}>
-                  <div style={{ width: 52, height: 52, borderRadius: 12, background: s.bg, color: s.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-                    <s.icon size={24} />
-                  </div>
-                  <h3 className="font-display" style={{ fontSize: 22, fontWeight: 700, marginBottom: 10 }}>{s.title}</h3>
-                  <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.7 }}>{s.desc}</p>
-                </div>
-                <div style={{ padding: "20px 28px 28px" }}>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-                    {s.tags.map(t => (
-                      <span key={t} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11.5, padding: "5px 10px", borderRadius: 6, background: "var(--bg2)", border: "1px solid var(--border)", color: "var(--muted)" }}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <a
-                    href={`https://wa.me/919035477754?text=Hi%2C+I'm+interested+in+${encodeURIComponent(s.title)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-ghost"
-                    style={{ width: "100%", justifyContent: "center" }}
-                  >
-                    Get Quote →
-                  </a>
-                </div>
+              <div
+                key={s.title}
+                className={`svc-index-item ${active === i ? "on" : ""}`}
+                onClick={() => jump(i)}
+              >
+                <span>{String(i + 1).padStart(2, "0")}</span>
+                <span>{s.title}</span>
               </div>
+            ))}
+          </aside>
+
+          <div>
+            {SERVICES.map((s, i) => (
+              <article
+                key={s.title}
+                ref={(el) => (panels.current[i] = el)}
+                className={`svc-panel fade-up ${i % 2 ? "dir-right" : "dir-left"}`}
+                onMouseMove={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect();
+                  e.currentTarget.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+                  e.currentTarget.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+                }}
+              >
+                <div className="svc-panel-num font-display">{String(i + 1).padStart(2, "0")}</div>
+
+                <div className="svc-panel-icon">
+                  <s.icon size={24} />
+                </div>
+
+                <h2 className="font-display svc-panel-title">{s.title}</h2>
+                <p className="svc-panel-desc">{s.desc}</p>
+
+                <div className="svc-panel-tags">
+                  {s.tags.map((t) => (
+                    <span key={t}>{t}</span>
+                  ))}
+                </div>
+
+                <a
+                  href={`https://wa.me/919035477754?text=Hi%2C+I'm+interested+in+${encodeURIComponent(s.title)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-ghost"
+                  data-cursor="Get quote"
+                >
+                  Get quote →
+                </a>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="divider" />
+      {/* ── PROCESS — horizontal rail ── */}
+      <section className="wrap section">
+        <span className="section-tag">Our process</span>
+        <SplitHeading as="h2" className="sec-title" stroke={[2, 3]}>
+          How we actually work
+        </SplitHeading>
 
-      {/* ── OUR PROCESS ── */}
-      <section style={{ padding: "90px 24px 100px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-
-          {/* Heading */}
-          <div className="fade-up dir-right" style={{ marginBottom: 72, textAlign: "center" }}>
-            <div className="section-tag" style={{ justifyContent: "center" }}>Our Process</div>
-            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em", marginBottom: 16 }}>
-              How We <span className="grad-text">Work</span>
-            </h2>
-            <p style={{ color: "var(--muted)", fontSize: 16, maxWidth: 520, margin: "0 auto", lineHeight: 1.7 }}>
-              A proven methodology that ensures successful project delivery and client satisfaction.
-            </p>
-          </div>
-
-          {/* Steps — vertical timeline on desktop, left-aligned stack on mobile */}
-          <div className="process-timeline" style={{ position: "relative", maxWidth: 860, margin: "0 auto" }}>
-
-            {/* Vertical connector line — hidden on mobile via CSS */}
-            <div className="process-line" style={{
-              position: "absolute",
-              left: "50%",
-              top: 0,
-              bottom: 0,
-              width: 2,
-              background: "linear-gradient(to bottom, var(--purple), var(--accent), var(--purple))",
-              opacity: 0.15,
-              transform: "translateX(-50%)",
-            }} />
-
-            {PROCESS_STEPS.map((step, i) => {
-              const isLeft = i % 2 === 0;
-              return (
-                <div
-                  key={i}
-                  className={`process-row fade-up ${isLeft ? "dir-left" : "dir-right"}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 32,
-                    marginBottom: i < PROCESS_STEPS.length - 1 ? 48 : 0,
-                    flexDirection: isLeft ? "row" : "row-reverse",
-                  }}
-                >
-                  {/* Card */}
-                  <div
-                    className="glass process-card"
-                    style={{
-                      flex: "0 1 calc(50% - 48px)",
-                      padding: "28px 30px",
-                      borderRadius: 14,
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div style={{
-                      position: "absolute",
-                      top: 0, left: 0, right: 0,
-                      height: 3,
-                      background: step.color,
-                      borderRadius: "14px 14px 0 0",
-                    }} />
-
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                      <div style={{
-                        width: 40, height: 40,
-                        borderRadius: 10,
-                        background: step.bg,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        flexShrink: 0,
-                      }}>
-                        <span className="font-display" style={{ fontSize: 13, fontWeight: 800, color: step.color, letterSpacing: "0.04em" }}>
-                          {step.number}
-                        </span>
-                      </div>
-                      <h3 className="font-display" style={{ fontSize: 17, fontWeight: 700, color: "var(--text)" }}>
-                        {step.title}
-                      </h3>
-                    </div>
-
-                    <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.7, margin: 0 }}>
-                      {step.desc}
-                    </p>
-                  </div>
-
-                  {/* Centre dot */}
-                  <div className="process-dot-col" style={{
-                    flexShrink: 0,
-                    width: 48,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    paddingTop: 18,
-                  }}>
-                    <div style={{
-                      width: 14,
-                      height: 14,
-                      borderRadius: "50%",
-                      background: step.color,
-                      border: "3px solid var(--bg)",
-                      boxShadow: `0 0 0 2px ${step.color}`,
-                      flexShrink: 0,
-                    }} />
-                  </div>
-
-                  {/* Empty half */}
-                  <div className="process-spacer" style={{ flex: "0 1 calc(50% - 48px)" }} />
-                </div>
-              );
-            })}
-          </div>
+        <div className="rail">
+          {PROCESS_STEPS.map((s) => (
+            <div className="rail-step" key={s.number}>
+              <div className="rail-num">STEP {s.number}</div>
+              <h3 className="rail-title">{s.title}</h3>
+              <p className="rail-desc">{s.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: "0 24px 80px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up dir-left cta-banner-inner" style={{
-            borderRadius: 20, padding: "64px 48px",
-            background: "var(--text)", textAlign: "center",
-          }}>
-            <h2 className="font-display" style={{ fontSize: "clamp(24px,3vw,38px)", fontWeight: 800, letterSpacing: "-0.025em", marginBottom: 14, color: "#fff" }}>
-              Ready to get started?
-            </h2>
-            <p style={{ color: "#aab3c2", fontSize: 16, maxWidth: 440, margin: "0 auto 32px", lineHeight: 1.7 }}>
-              Pick a service, drop us a message — we'll get back within 24 hours.
-            </p>
-            <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-              <a
-                href="https://wa.me/919035477754?text=Hi%2C+I+want+to+discuss+a+project!"
-                target="_blank"
-                rel="noreferrer"
-                className="btn-wa cta-shine"
-                style={{ fontSize: 15, padding: "14px 28px" }}
-              >
-                WhatsApp Us
-              </a>
-              <a
-                href="mailto:um7websolutions@gmail.com"
-                className="btn-ghost cta-shine-ghost"
-                style={{ fontSize: 15, padding: "14px 28px", borderColor: "rgba(255,255,255,0.3)", color: "#fff" }}
-              >
-                Send Email →
-              </a>
-            </div>
+      <section className="wrap" style={{ paddingBottom: 120 }}>
+        <div className="trust-band band-pad fade-up">
+          <h2 className="font-display band-title">
+            Ready to get <span className="red-text">started?</span>
+          </h2>
+          <p
+            style={{
+              color: "var(--muted)", fontSize: 15, maxWidth: 440,
+              margin: "0 auto 34px", lineHeight: 1.75, position: "relative", zIndex: 1,
+            }}
+          >
+            Pick a service, drop us a message — we&rsquo;ll get back within 24 hours.
+          </p>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+            <a
+              ref={ctaRef}
+              href="https://wa.me/919035477754?text=Hi%2C+I+want+to+discuss+a+project!"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-primary"
+              data-cursor="Whatsapp"
+            >
+              WhatsApp us
+            </a>
+            <Link to="/contact" className="btn-ghost">Send email →</Link>
           </div>
         </div>
       </section>

@@ -13,17 +13,13 @@ import {
 } from "lucide-react";
 
 import {
-  SiPython,
-  SiDjango,
-  SiReact,
-  SiPostgresql,
+  SiPython, SiOpenjdk, SiJavascript, SiPhp, SiReact, SiAngular, SiVuedotjs,
+  SiNodedotjs, SiExpress, SiDjango, SiFlask, SiSpring, SiLaravel, SiFlutter,
+  SiMongodb, SiMysql, SiPostgresql, SiFirebase, SiTensorflow, SiPytorch,
+  SiPandas, SiBootstrap, SiTailwindcss, SiDocker,
 } from "react-icons/si";
 
-import {
-  FaBrain,
-  FaChartLine,
-  FaPlug,
-} from "react-icons/fa";
+import { FaPlug } from "react-icons/fa";
 
 export const FYP_WHY_CHOOSE = [
   { icon: Briefcase, label: "Industry-Oriented Development" },
@@ -35,15 +31,39 @@ export const FYP_WHY_CHOOSE = [
   { icon: FolderKanban, label: "Portfolio-Focused Projects" },
 ];
 
+/* Full stack list — rendered as a moving icon rail (see TechRail).
+   `color` is the official brand colour of each technology. */
 export const FYP_TECH_STACK = [
-  { icon: SiPython, label: "Python" },
-  { icon: SiDjango, label: "Django" },
-  { icon: SiReact, label: "React" },
-  { icon: SiPostgresql, label: "PostgreSQL" },
-  { icon: FaPlug, label: "REST APIs" },
-  { icon: FaBrain, label: "Artificial Intelligence" },
-  { icon: FaBrain, label: "Machine Learning" },
-  { icon: FaChartLine, label: "Data Analytics" },
+  { icon: SiPython,      label: "Python",       color: "#3776AB" },
+  { icon: SiOpenjdk,     label: "Java",         color: "#F89820" },
+  { icon: SiJavascript,  label: "JavaScript",   color: "#F7DF1E" },
+  { icon: SiPhp,         label: "PHP",          color: "#777BB4" },
+  { icon: SiReact,       label: "React",        color: "#61DAFB" },
+  { icon: SiAngular,     label: "Angular",      color: "#DD0031" },
+  { icon: SiVuedotjs,    label: "Vue.js",       color: "#4FC08D" },
+  { icon: SiNodedotjs,   label: "Node.js",      color: "#5FA04E" },
+  { icon: SiExpress,     label: "Express.js",   color: "#FFFFFF" },
+  { icon: SiDjango,      label: "Django",       color: "#44B78B" },
+  { icon: SiFlask,       label: "Flask",        color: "#FFFFFF" },
+  { icon: SiSpring,      label: "Spring Boot",  color: "#6DB33F" },
+  { icon: SiLaravel,     label: "Laravel",      color: "#FF2D20" },
+  { icon: SiFlutter,     label: "Flutter",      color: "#02569B" },
+  { icon: SiMongodb,     label: "MongoDB",      color: "#47A248" },
+  { icon: SiMysql,       label: "MySQL",        color: "#4479A1" },
+  { icon: SiPostgresql,  label: "PostgreSQL",   color: "#4169E1" },
+  { icon: SiFirebase,    label: "Firebase",     color: "#FFCA28" },
+  { icon: SiTensorflow,  label: "TensorFlow",   color: "#FF6F00" },
+  { icon: SiPytorch,     label: "PyTorch",      color: "#EE4C2C" },
+  { icon: SiPandas,      label: "Pandas",       color: "#E70488" },
+  { icon: SiBootstrap,   label: "Bootstrap",    color: "#7952B3" },
+  { icon: SiTailwindcss, label: "Tailwind CSS", color: "#38BDF8" },
+  { icon: SiDocker,      label: "Docker",       color: "#2496ED" },
+  { icon: FaPlug,        label: "REST APIs",    color: "#FF1E1E" },
+];
+
+/* short list used by the big text marquee under the hero */
+export const FYP_MARQUEE = [
+  "Python", "React", "Django", "Java", "Machine Learning", "Flutter",
 ];
 
 export const FYP_PACKAGE_INCLUDES = [

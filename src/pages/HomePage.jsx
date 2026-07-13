@@ -1,22 +1,25 @@
-import realEstateImg from "../assets/real-estate-preview.png";
-import makeupImg from "../assets/makeup-preview.png";
-
-import medrouteImg from "../assets/medroute-preview.png";
-import SEO from "../components/SEO";
-
-import quikmartImg from "../assets/quikmart-preview.png";
-import hardlineImg from "../assets/hardline-preview.png";
-import dentalImg from "../assets/dental-preview.png";
-import skinImg from "../assets/skin-preview.png";
-import genImg from "../assets/gen-preview.png";
-import heroimage from "../assets/hero-image.png";
-
-import { useFadeUp } from "../hooks/useScrolled";
-import { SERVICES } from "../constants/services";
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ShieldCheck } from "lucide-react";
+
+import SEO from "../components/SEO";
+import FlowHero from "../components/FlowHero";
+import { Marquee, SplitHeading, CurtainWipe } from "../components/Motion";
+import { HorizontalGallery, StackedSteps } from "../components/Scroll";
+import { useCardLight, useTilt } from "../lib/motion";
+import { useFadeUp } from "../hooks/useScrolled";
+
+import { SERVICES } from "../constants/services";
 import { FEATURES } from "../constants/features";
-import { ImageIcon, ShieldCheck } from "lucide-react";
+
+import medrouteImg   from "../assets/medroute-preview.png";
+import quikmartImg   from "../assets/quikmart-preview.png";
+import hardlineImg   from "../assets/hardline-preview.png";
+import realEstateImg from "../assets/real-estate-preview.png";
+import makeupImg     from "../assets/makeup-preview.png";
+import dentalImg     from "../assets/dental-preview.png";
+import skinImg       from "../assets/skin-preview.png";
+import genImg        from "../assets/gen-preview.png";
 
 const PORTFOLIO_PROJECTS = [
   {
@@ -83,61 +86,64 @@ const PORTFOLIO_PROJECTS = [
     url: "https://gen-clinic-demo.vercel.app",
     image: genImg,
   },
-  
 ];
 
-export default function HomePage() {
-  const useCounter = (end, start, duration = 2000) => {
-    const [count, setCount] = useState(0);
-    useEffect(() => {
-      if (!start) return;
-      let startVal = 0;
-      const increment = end / (duration / 16);
-      const timer = setInterval(() => {
-        startVal += increment;
-        if (startVal >= end) {
-          setCount(end);
-          clearInterval(timer);
-        } else {
-          setCount(Math.floor(startVal));
-        }
-      }, 16);
-      return () => clearInterval(timer);
-    }, [end, start, duration]);
-    return count;
-  };
+const PROCESS = [
+  { number: "01", title: "Research",    desc: "We learn your business, your customers and what your competitors are getting wrong — before a single pixel is drawn." },
+  { number: "02", title: "Strategy",    desc: "Sitemap, user flows, conversion paths. We decide what the site actually has to make people do." },
+  { number: "03", title: "Interface",   desc: "High-fidelity design with real content, a real type scale and real states — no placeholder text." },
+  { number: "04", title: "Development", desc: "React, Django, PostgreSQL. Clean, tested and documented — built to be handed over, not held hostage." },
+  { number: "05", title: "Launch",      desc: "Deploy, monitor, index. Then we watch the analytics with you and keep tightening." },
+];
 
-  const navigate = useNavigate();
+const MARQUEE_WORDS = [
+  "Web Development", "UI / UX Design", "SaaS Products",
+  "Web Apps", "Payment Integration", "Bug Fixing",
+];
+
+function useCounter(end, start, duration = 2000) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let v = 0;
+    const step = end / (duration / 16);
+    const id = setInterval(() => {
+      v += step;
+      if (v >= end) { setCount(end); clearInterval(id); }
+      else setCount(Math.floor(v));
+    }, 16);
+    return () => clearInterval(id);
+  }, [end, start, duration]);
+  return count;
+}
+
+export default function HomePage() {
   useFadeUp();
+  useCardLight();
+  useTilt();
 
   const [isIndia, setIsIndia] = useState(true);
-
   const statsRef = useRef(null);
-  const [statsInView, setStatsInView] = useState(false);
+  const [statsIn, setStatsIn] = useState(false);
 
   useEffect(() => {
     const el = statsRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setStatsInView(true);
-          observer.disconnect();
-        }
-      },
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setStatsIn(true); obs.disconnect(); } },
       { threshold: 0.4 }
     );
-    observer.observe(el);
-    return () => observer.disconnect();
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
-  const projects = useCounter(10, statsInView);
-  const tech = useCounter(5, statsInView);
+  const projects = useCounter(20, statsIn);
+  const tech = useCounter(10, statsIn);
 
   useEffect(() => {
     fetch("https://ipapi.co/json/")
-      .then((res) => res.json())
-      .then((data) => setIsIndia(data.country === "IN"))
+      .then((r) => r.json())
+      .then((d) => setIsIndia(d.country === "IN"))
       .catch(() => setIsIndia(true));
   }, []);
 
@@ -148,132 +154,27 @@ export default function HomePage() {
         description="UM Web Solutions is a professional web development agency in Kalaburagi, Karnataka. We build React, Django, and full-stack websites, SaaS products, and mobile apps for startups and businesses across India."
         path="/"
       />
-      <div style={{ position: "relative", width: "100%", minHeight: "clamp(560px, 78vw, 760px)", overflow: "hidden", background: "linear-gradient(135deg, #1a2540, #0b1220)" }}>
-        <img
-          src={heroimage}
-          alt="Programmer coding at a desk with several monitors"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-          onError={(e) => { e.currentTarget.style.display = "none"; }}
-        />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(11,18,32,0.78) 0%, rgba(11,18,32,0.6) 45%, rgba(11,18,32,0.82) 100%)" }} />
 
-        <div className="hero-inner" style={{ position: "relative", zIndex: 1, maxWidth: 760, margin: "0 auto", padding: "150px 24px 70px", width: "100%", textAlign: "center" }}>
-          <div className="fade-up dir-left" style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "7px 14px", borderRadius: 100,
-            border: "1px solid rgba(255,255,255,0.18)",
-            background: "rgba(255,255,255,0.06)",
-            fontSize: 13, fontWeight: 500, color: "#cfd6e2", marginBottom: 24,
-          }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#1faa59", flexShrink: 0 }} />
-            Available for new projects
-          </div>
-          <h1 className="font-display fade-up dir-right" style={{ fontSize: "clamp(30px,4vw,52px)", fontWeight: 800, lineHeight: 1.14, letterSpacing: "-0.025em", marginBottom: 22, color: "#fff" }}>
-            Creative &amp; Reliable Development<br />
-            <span style={{ color: "#8fb0ff" }}>for Businesses That Want to</span><br />
-            Grow Online
-          </h1>
-          <p className="fade-up dir-left" style={{ fontSize: 17.5, color: "#c5cbd6", lineHeight: 1.7, marginBottom: 34, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
-            We design and build the full stack — frontend, backend and deployment —
-            so what you ship to clients and customers looks and works like it was
-            made by a real engineering team.
-          </p>
-          <div className="fade-up dir-right" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 36, justifyContent: "center" }}>
-            <button className="btn-primary cta-shine" onClick={() => navigate("/contact")}>
-              Get a Free Quote
-            </button>
-            <a
-              href="https://wa.me/919035477754?text=Hi%2C+I+want+to+discuss+a+project!"
-              target="_blank"
-              rel="noreferrer"
-              className="btn-ghost cta-shine-ghost"
-              style={{ borderColor: "rgba(255,255,255,0.3)", color: "#fff" }}
-            >
-              Contact Us
-            </a>
-          </div>
-        </div>
-      </div>
+      <CurtainWipe label="Portfolio" targetId="portfolio" />
 
-      <section style={{ paddingTop: 0, paddingBottom: 70, position: "relative", overflow: "hidden" }}>
-        <div className="grid-bg" />
-        <div style={{ maxWidth: 620, margin: "56px auto 0", padding: "0 24px", position: "relative", zIndex: 1 }}>
-          <div className="fade-up dir-left demo-mockup" style={{ position: "relative" }}>
-            <div style={{ background: "#fff", border: "1px solid var(--border)", borderRadius: 16, padding: 18, boxShadow: "0 0 0 1px rgba(16,25,43,0.04), 0 0 70px rgba(0,0,0,0.35), 0 25px 50px rgba(0,0,0,0.25)", position: "relative", overflow: "hidden" }}>
-              <div className="demo-cursor demo-anim" />
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
-                {["#c0392b", "#b6802a", "#0e8f86"].map((c) => (
-                  <div key={c} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />
-                ))}
-                <div style={{ flex: 1, background: "var(--bg2)", borderRadius: 6, height: 20, marginLeft: 10 }} />
-              </div>
-              <div style={{ background: "var(--bg2)", borderRadius: 10, padding: 16, border: "1px solid var(--border)" }}>
-                <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--muted)", marginBottom: 12, letterSpacing: "0.04em" }}>
-                  CLINIC SAAS — DASHBOARD
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
-                  {[["48", "Patients Today", "#2454d8"], ["₹24,500", "Revenue", "#0e8f86"], ["12", "Appointments", "#b6802a"], ["3", "Pending Bills", "#c0392b"]].map(([v, l, c], i) => (
-                    <div key={l} className={i === 0 ? "demo-ring demo-anim" : ""} style={{ background: "#fff", borderRadius: 8, padding: 12, border: "1px solid var(--border)" }}>
-                      <div className="font-display" style={{ fontSize: 18, fontWeight: 700, color: c }}>
-                        {i === 3 ? <span className="demo-tick demo-anim">{v}</span> : v}
-                      </div>
-                      <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{l}</div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ background: "#fff", borderRadius: 8, padding: 12, marginBottom: 10, border: "1px solid var(--border)" }}>
-                  <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, fontWeight: 600 }}>RECENT PATIENTS</div>
-                  {["Rahul Sharma — 10:30 AM", "Priya Patel — 11:00 AM", "Arjun Singh — 11:45 AM"].map((p) => (
-                    <div key={p} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", borderBottom: "1px solid var(--border)" }}>
-                      <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(36,84,216,0.12)", flexShrink: 0 }} />
-                      <div style={{ fontSize: 12.5, color: "var(--text)" }}>{p}</div>
-                    </div>
-                  ))}
-                  <div className="demo-row-reveal demo-anim" style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0" }}>
-                    <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(14,143,134,0.14)", flexShrink: 0 }} />
-                    <div style={{ fontSize: 12.5, color: "var(--text)" }}>Sneha Reddy — 12:15 PM</div>
-                  </div>
-                </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <div className="demo-press demo-anim" style={{ flex: 1, background: "var(--purple)", borderRadius: 7, padding: "8px 12px", fontSize: 12, color: "#fff", textAlign: "center", fontWeight: 600 }}>+ Add Patient</div>
-                  <div className="demo-press-2 demo-anim" style={{ flex: 1, background: "#fff", border: "1px solid var(--border)", borderRadius: 7, padding: "8px 12px", fontSize: 12, color: "var(--text)", textAlign: "center", fontWeight: 600 }}>New Bill</div>
-                </div>
-              </div>
-            </div>
-            <div style={{ position: "absolute", bottom: -14, left: -14, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: "9px 14px", boxShadow: "0 10px 24px rgba(16,25,43,0.1)", display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ color: "#0e8f86", fontSize: 16 }}>✓</span>
-              <span style={{ fontSize: 12.5, color: "var(--text)", fontWeight: 600 }}>Clinic SaaS — Live Preview</span>
-            </div>
-          </div>
-          <div style={{ textAlign: "center", marginTop: 26, fontSize: 12, color: "var(--faint)" }}>
-            Live demo — hover to pause
-          </div>
-        </div>
+      {/* ─────────────── HERO — flow field ─────────────── */}
+      <FlowHero />
 
-        <div style={{ maxWidth: 1200, margin: "64px auto 0", padding: "32px 24px 0", borderTop: "1px solid var(--border)" }}>
-          <div className="fade-up dir-right" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 24 }}>
-            {SERVICES.slice(0, 4).map((s, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 42, height: 42, borderRadius: 10, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center", color: s.color, flexShrink: 0 }}>
-                  <s.icon size={20} />
-                </div>
-                <span style={{ fontSize: 14.5, fontWeight: 600, color: "var(--text)" }}>{s.title}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ─────────────── MARQUEE ─────────────── */}
+      <Marquee words={MARQUEE_WORDS} />
 
-      <section style={{ padding: "0 24px 90px" }}>
-        <div className="fade-up dir-left trust-band" style={{ maxWidth: 1200, margin: "0 auto", background: "#121619", borderRadius: 18, padding: "48px 40px" }}>
-          <div style={{ maxWidth: 640, marginBottom: 40 }}>
-            <div className="section-tag" style={{ color: "#8fb0ff" }}>Why Trust Us</div>
-            <p style={{ fontSize: 16, color: "#aab3c2", lineHeight: 1.7 }}>
-              Whether you're a startup founder or a small business owner, every project gets the
-              same full attention — from the first call to final deployment, with direct access
-              to the person actually building it.
+      {/* ─────────────── TRUST / STATS ─────────────── */}
+      <section className="wrap section">
+        <div className="trust-band band-pad band-pad-sm fade-up dir-left">
+          <div style={{ maxWidth: 640, marginBottom: 40, position: "relative", zIndex: 1 }}>
+            <span className="section-tag">Why trust us</span>
+            <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.75 }}>
+              Whether you&rsquo;re a startup founder or a small business owner, every project gets
+              the same full attention — from the first call to final deployment, with direct
+              access to the person actually building it.
             </p>
           </div>
+
           <div className="stats-grid" ref={statsRef}>
             <div className="stat-box">
               <div className="font-display stat-box-num">{projects}+</div>
@@ -291,7 +192,7 @@ export default function HomePage() {
               <div className="trust-badge" aria-hidden="true">
                 <svg className="trust-badge-ring" viewBox="0 0 120 120">
                   <path id="badgeCirclePath" fill="none" d="M60,60 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0" />
-                  <text fontSize="8.6" letterSpacing="2.2" fill="#cfd6e2">
+                  <text fontSize="8.6" letterSpacing="2.2">
                     <textPath href="#badgeCirclePath" startOffset="0%">
                       • TRUSTED DEV PARTNER • UM WEB SOLUTIONS
                     </textPath>
@@ -306,171 +207,124 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section style={{ padding: "90px 24px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
-            <div className="section-tag">What We're Offering</div>
-            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em" }}>
-              Services built for <span className="grad-text">real business growth</span>
-            </h2>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 20 }}>
-            {SERVICES.map((s, i) => (
-              <div key={i} className={`service-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`} style={{ padding: "26px 24px", height: "100%" }}>
-                <div className="service-icon" style={{ background: s.bg, color: s.color, marginBottom: 16 }}>
-                  <s.icon size={22} />
-                </div>
-                <h3 className="font-display" style={{ fontSize: 17.5, fontWeight: 700, marginBottom: 8 }}>{s.title}</h3>
-                <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.65, marginBottom: 18 }}>{s.desc}</p>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {s.tags.map((t) => (
-                    <span key={t} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11.5, padding: "4px 9px", borderRadius: 6, background: "var(--bg2)", color: "var(--muted)" }}>
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* ─────────────── SERVICES — full-bleed rows ─────────────── */}
+      <section className="wrap section" id="services">
+        <span className="section-tag">What we&rsquo;re offering</span>
+        <SplitHeading as="h2" className="sec-title" stroke={[3, 4, 5]}>
+          Services built for real business growth
+        </SplitHeading>
+
+        <div className="svc-list">
+          {SERVICES.map((s, i) => (
+            <a
+              key={s.title}
+              className="srow"
+              href={`https://wa.me/919035477754?text=Hi%2C+I'm+interested+in+${encodeURIComponent(s.title)}`}
+              target="_blank"
+              rel="noreferrer"
+              data-cursor="Get quote"
+              onMouseMove={(e) => {
+                const r = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+              }}
+            >
+              <span className="srow-blast" />
+              <span className="srow-num">{String(i + 1).padStart(2, "0")}</span>
+              <span className="srow-icon"><s.icon size={20} /></span>
+              <h3 className="font-display srow-name">{s.title}</h3>
+              <span className="srow-desc">{s.desc}</span>
+              <span className="srow-tags">{s.tags.join(" · ")}</span>
+              <span className="srow-arrow">→</span>
+            </a>
+          ))}
         </div>
       </section>
 
-      <div className="divider" />
+      {/* ─────────────── PORTFOLIO — horizontal pinned ─────────────── */}
+      <HorizontalGallery projects={PORTFOLIO_PROJECTS} />
 
-      <section style={{ padding: "90px 24px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up dir-left" style={{ marginBottom: 56 }}>
-            <div className="section-tag">Portfolio</div>
-            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em", marginBottom: 12 }}>
-              Recent <span className="grad-text">work</span>
-            </h2>
-            <p style={{ color: "var(--muted)", fontSize: 15 }}>
-              A selection of live projects — client sites, startup builds, and our own SaaS products.
-            </p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: 20, perspective: 1000 }}>
-            {PORTFOLIO_PROJECTS.map((project, i) => (
-              <div key={i} className={`portfolio-card tilt-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`}>
-                <div className="portfolio-thumb" style={{ position: "relative", overflow: "hidden" }}>
-                  {project.image
-                    ? <img src={project.image} alt={project.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <ImageIcon size={28} />
-                  }
-                </div>
-                <div style={{ padding: 22 }}>
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--faint)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                    {project.tag}
-                  </span>
-                  <h3 className="font-display" style={{ fontSize: 17, fontWeight: 700, margin: "6px 0 8px" }}>{project.title}</h3>
-                  <p style={{ fontSize: 13.5, color: "var(--muted)", lineHeight: 1.6, marginBottom: 14 }}>{project.desc}</p>
-                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
-                    {project.stack.map((t) => (
-                      <span key={t} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, padding: "3px 8px", borderRadius: 5, background: "var(--bg2)", color: "var(--muted)" }}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <a href={project.url} target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "var(--purple)", fontWeight: 600, textDecoration: "none" }}>
-                    View Website →
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* ─────────────── PROCESS — stacked pinned cards ─────────────── */}
+      <section className="wrap section">
+        <span className="section-tag">How we work</span>
+        <SplitHeading as="h2" className="sec-title" stroke={[2]}>
+          From first call to launch
+        </SplitHeading>
       </section>
+      <StackedSteps steps={PROCESS} />
 
-      <div className="divider" />
+      {/* ─────────────── CLINIC SAAS ─────────────── */}
+      <section className="wrap section">
+        <span className="section-tag">SaaS Products</span>
+        <SplitHeading as="h2" className="sec-title" stroke={[4, 5, 6]}>
+          A product we&rsquo;re building for real businesses
+        </SplitHeading>
 
-      <section style={{ padding: "90px 24px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
-            <div className="section-tag">SaaS Products</div>
-            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em" }}>
-              A product we're building <span className="grad-text-green">for real businesses</span>
-            </h2>
-          </div>
-          <div className="fade-up dir-left" style={{ display: "flex", flexWrap: "wrap", borderRadius: 16, overflow: "hidden", background: "#121619" }}>
-            <div style={{ flex: "1 1 400px", padding: 44 }}>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 100, background: "rgba(14,143,134,0.12)", border: "1px solid rgba(14,143,134,0.3)", fontSize: 12, color: "#4fd1c5", marginBottom: 18, fontWeight: 600 }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4fd1c5", display: "inline-block" }} /> In Development
-              </div>
-              <h3 className="font-display" style={{ fontSize: 28, fontWeight: 800, marginBottom: 12, color: "#fff" }}>Clinic SaaS</h3>
-              <p style={{ color: "#aab3c2", fontSize: 15, lineHeight: 1.7, marginBottom: 26 }}>
-                A complete clinic management system — patient records, prescriptions, billing, and appointment tracking. Built for modern clinics.
-              </p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 30 }}>
-                {["Patient Management", "Prescription System", "Billing & Invoices", "Appointment Tracking", "Staff Management", "Reports & Analytics"].map((f) => (
-                  <div key={f} className="feature-tag" style={{ color: "#c5cbd6" }}><span className="dot">✓</span>{f}</div>
-                ))}
-              </div>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <button className="btn-primary" onClick={() => navigate("/contact")}>Request Demo</button>
-                <button className="btn-ghost" style={{ borderColor: "rgba(255,255,255,0.3)", color: "#fff" }} onClick={() => navigate("/products")}>Learn More →</button>
-              </div>
+        <div className="saas fade-up dir-left">
+          <div className="saas-main">
+            <div className="saas-status">
+              <span className="hero-pulse" /> In Development
             </div>
-            <div style={{ flex: "1 1 280px", background: "rgba(255,255,255,0.03)", padding: 32, display: "flex", flexDirection: "column", justifyContent: "center", borderLeft: "1px solid rgba(255,255,255,0.08)" }}>
-              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#8b96a8", marginBottom: 16, letterSpacing: "0.06em" }}>PRICING PLANS</div>
-              {[["Basic", "₹499/mo", "$15/mo"], ["Pro", "₹1499/mo", "$35/mo"], ["Clinic Chain", "₹2999/mo", "$79/mo"]].map(([plan, inr, usd]) => (
-                <div key={plan} className="pricing-card-hover" style={{ padding: 16, borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", marginBottom: 10 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 14, fontWeight: 500, color: "#fff" }}>{plan}</span>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>{isIndia ? inr : usd}</div>
-                  </div>
+            <h3 className="font-display saas-title">Clinic SaaS</h3>
+            <p className="saas-desc">
+              A complete clinic management system — patient records, prescriptions, billing,
+              and appointment tracking. Built for modern clinics.
+            </p>
+            <div className="saas-features">
+              {[
+                "Patient Management", "Prescription System", "Billing & Invoices",
+                "Appointment Tracking", "Staff Management", "Reports & Analytics",
+              ].map((f) => (
+                <div key={f} className="feature-tag">
+                  <span className="dot">✓</span>{f}
                 </div>
               ))}
-              <a href="https://wa.me/919035477754?text=Hi%2C+I'm+interested+in+Clinic+SaaS!" target="_blank" rel="noreferrer" className="btn-wa" style={{ marginTop: 16, justifyContent: "center" }}>
-                Get Early Access
-              </a>
+            </div>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 30 }}>
+              <Link to="/contact" className="btn-primary">Request demo</Link>
+              <Link to="/products" className="btn-ghost">Learn more →</Link>
             </div>
           </div>
-        </div>
-      </section>
 
-      <div className="divider" />
-
-      <section style={{ padding: "90px 24px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up dir-right" style={{ marginBottom: 56 }}>
-            <div className="section-tag">Why Choose Us</div>
-            <h2 className="font-display" style={{ fontSize: "clamp(28px,3.6vw,44px)", fontWeight: 800, letterSpacing: "-0.025em" }}>
-              Not just developers. <span className="grad-text">Your growth partner.</span>
-            </h2>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 20, perspective: 1000 }}>
-            {FEATURES.map((f, i) => (
-              <div key={i} className={`stat-card glass tilt-card fade-up ${i % 2 === 0 ? "dir-left" : "dir-right"}`} style={{ textAlign: "left" }}>
-                <div style={{ marginBottom: 16, color: "var(--purple)" }}>{f.icon}</div>
-                <h3 className="font-display" style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{f.title}</h3>
-                <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>{f.desc}</p>
+          <div className="saas-side">
+            <div className="section-tag">Pricing plans</div>
+            {[
+              ["Basic", "₹499/mo", "$15/mo"],
+              ["Pro", "₹1499/mo", "$35/mo"],
+              ["Clinic Chain", "₹2999/mo", "$79/mo"],
+            ].map(([plan, inr, usd]) => (
+              <div key={plan} className="pricing-card-hover saas-plan">
+                <span>{plan}</span>
+                <strong>{isIndia ? inr : usd}</strong>
               </div>
             ))}
+            <a
+              href="https://wa.me/919035477754?text=Hi%2C+I'm+interested+in+Clinic+SaaS!"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-wa"
+              style={{ marginTop: 18, width: "100%" }}
+            >
+              Get early access
+            </a>
           </div>
         </div>
       </section>
 
-      <section style={{ padding: "0 24px 70px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fade-up dir-left cta-banner-inner" style={{ borderRadius: 20, padding: "64px 48px", background: "var(--text)", textAlign: "center" }}>
-            <h2 className="font-display" style={{ fontSize: "clamp(26px,3.6vw,40px)", fontWeight: 800, letterSpacing: "-0.025em", marginBottom: 16, color: "#fff" }}>
-              Ready to build something great?
-            </h2>
-            <p style={{ color: "#aab3c2", fontSize: 16, maxWidth: 480, margin: "0 auto 36px" }}>
-              Let's talk about your project. The first consultation is free — no pressure, just a real conversation.
-            </p>
-            <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-              <button
-                className="btn-primary"
-                style={{ fontSize: 16, padding: "15px 30px", background: "#fff", color: "var(--text)", border: "1px solid #fff" }}
-                onClick={() => navigate("/contact")}
-              >
-                Book Free Call
-              </button>
-              <a href="https://wa.me/919035477754" target="_blank" rel="noreferrer" className="btn-wa" style={{ fontSize: 16, padding: "15px 30px" }}>
-                WhatsApp Now
-              </a>
+      {/* ─────────────── WHY US ─────────────── */}
+      <section className="wrap section">
+        <span className="section-tag">Why choose us</span>
+        <SplitHeading as="h2" className="sec-title" stroke={[3, 4]}>
+          Not just developers. Your growth partner.
+        </SplitHeading>
+
+        <div className="why-grid">
+          {FEATURES.map((f, i) => (
+            <div key={f.title} className={`stat-card tilt-card fade-up ${i % 2 ? "dir-right" : "dir-left"}`}>
+              <div className="why-icon">{f.icon}</div>
+              <h3 className="font-display why-title">{f.title}</h3>
+              <p className="why-desc">{f.desc}</p>
             </div>
-          </div>
+          ))}
         </div>
       </section>
     </div>

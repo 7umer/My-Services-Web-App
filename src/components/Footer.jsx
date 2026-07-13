@@ -1,153 +1,110 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useScramble, useMagnetic } from "../lib/motion";
 import logo from "../assets/um-web-solutions-logo-full.png";
 
-const PAGES = ["Home", "Services", "Products", "Pricing", "Contact"];
+const PAGES = [
+  { name: "Home",               path: "/" },
+  { name: "Services",           path: "/services" },
+  { name: "Products",           path: "/products" },
+  { name: "Pricing",            path: "/pricing" },
+  { name: "Final Year Project", path: "/final-year-project" },
+  { name: "Contact",            path: "/contact" },
+];
+
+function ScrambleLink({ children, ...props }) {
+  const ref = useScramble();
+  return (
+    <a {...props} className="nav-link" style={{ display: "inline-block", ...props.style }}>
+      <span ref={ref}>{children}</span>
+    </a>
+  );
+}
 
 export default function Footer() {
-  const navigate = useNavigate();
+  const ctaRef = useMagnetic(0.3);
+
   return (
-    <footer
-      style={{
-        borderTop: "1px solid var(--border)",
-        padding: "48px 24px 32px",
-        marginTop: 40,
-      }}
-    >
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        {/* Top row */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            flexWrap: "wrap",
-            gap: 32,
-            marginBottom: 40,
-          }}
-        >
-          {/* Brand */}
-          <div style={{ maxWidth: 300 }}>
-            <img
-              src={logo}
-              alt="UM Web Solutions"
-              style={{ height: 38, width: "auto", display: "block", marginBottom: 14 }}
-            />
-            <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.7 }}>
-              Building premium web products and SaaS solutions for businesses
-              that want to grow.
-            </p>
+    <footer style={{ position: "relative", zIndex: 2, borderTop: "1px solid var(--border)" }}>
+      {/* MEGA CTA */}
+      <div className="foot-cta">
+        <h2 className="font-display foot-cta-title">
+          Let&rsquo;s build
+          <br />
+          <span className="red-text">something unreal.</span>
+        </h2>
+
+        <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+          <Link ref={ctaRef} to="/contact" className="btn-primary" data-cursor="Let's talk">
+            Start a project
+          </Link>
+          <a
+            href="https://wa.me/919035477754?text=Hi%2C+I+want+to+discuss+a+project!"
+            target="_blank"
+            rel="noreferrer"
+            className="btn-wa"
+            data-cursor="Whatsapp"
+          >
+            WhatsApp now
+          </a>
+        </div>
+      </div>
+
+      <div className="divider" />
+
+      {/* LINKS */}
+      <div className="foot-links">
+        <div style={{ maxWidth: 300 }}>
+          <img
+            src={logo}
+            alt="UM Web Solutions"
+            style={{ height: 38, width: "auto", marginBottom: 16 }}
+          />
+          <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.75 }}>
+            Building premium web products and SaaS solutions for businesses that want to grow.
+          </p>
+        </div>
+
+        <div className="foot-cols">
+          <div>
+            <div className="section-tag">Pages</div>
+            {PAGES.map((p) => (
+              <div key={p.name} style={{ marginBottom: 12 }}>
+                <Link
+                  to={p.path}
+                  className={`nav-link ${p.path === "/final-year-project" ? "nav-fyp" : ""}`}
+                >
+                  {p.name}
+                </Link>
+              </div>
+            ))}
           </div>
 
-          {/* Links */}
-          <div style={{ display: "flex", gap: 60, flexWrap: "wrap" }}>
-            <div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: "var(--muted)",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: 16,
-                  fontFamily: "Syne",
-                }}
-              >
-                Pages
-              </div>
-              {PAGES.map((p) => (
-                <div key={p} style={{ marginBottom: 10 }}>
-                  <a
-                    href="#"
-                    style={{
-                      color: "var(--muted)",
-                      textDecoration: "none",
-                      fontSize: 14,
-                      transition: "color 0.2s",
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-
-                      const routes = {
-                        Home: "/",
-                        Services: "/services",
-                        Products: "/products",
-                        Pricing: "/pricing",
-                        Contact: "/contact",
-                      };
-                      navigate(routes[p] || "/");
-
-                      
-                    }}
-                    onMouseEnter={(e) => (e.target.style.color = "var(--text)")}
-                    onMouseLeave={(e) =>
-                      (e.target.style.color = "var(--muted)")
-                    }
-                  >
-                    {p}
-                  </a>
-                </div>
-              ))}
-            </div>
-            <div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: "var(--muted)",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: 16,
-                  fontFamily: "Syne",
-                }}
-              >
-                Contact
-              </div>
-              <a
-                href="https://wa.me/919035477754"
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  display: "block",
-                  color: "var(--purple)",
-                  textDecoration: "none",
-                  fontSize: 14,
-                  marginBottom: 10,
-                }}
-              >
+          <div>
+            <div className="section-tag">Contact</div>
+            <div style={{ marginBottom: 12 }}>
+              <ScrambleLink href="https://wa.me/919035477754" target="_blank" rel="noreferrer">
                 WhatsApp
-              </a>
-              <a
-                href="mailto:um7websolutions@gmail.com"
-                style={{
-                  display: "block",
-                  color: "var(--muted)",
-                  textDecoration: "none",
-                  fontSize: 14,
-                }}
-              >
-                Email
-              </a>
+              </ScrambleLink>
+            </div>
+            <div style={{ marginBottom: 12 }}>
+              <ScrambleLink href="mailto:um7websolutions@gmail.com">Email</ScrambleLink>
+            </div>
+            <div style={{ marginBottom: 12 }}>
+              <ScrambleLink href="tel:+919035477754">Call</ScrambleLink>
+            </div>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 10.5, letterSpacing: ".14em",
+              textTransform: "uppercase", color: "var(--faint)", marginTop: 18, lineHeight: 2 }}>
+              Kalaburagi, Karnataka<br />India
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="divider" style={{ marginBottom: 24 }} />
+      <div className="divider" />
 
-        {/* Bottom row */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 12,
-            alignItems: "center",
-          }}
-        >
-          <div style={{ fontSize: 13, color: "var(--muted)" }}>
-            © 2025 UM Web Solutions. All rights reserved.
-          </div>
-          <div style={{ fontSize: 13, color: "var(--muted)" }}>
-            Design & Development by UM Web Solutions
-          </div>
-        </div>
+      <div className="foot-bottom">
+        <div>© 2025 UM Web Solutions. All rights reserved.</div>
+        <div>Design &amp; Development by UM Web Solutions</div>
       </div>
     </footer>
   );

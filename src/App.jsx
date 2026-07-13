@@ -1,12 +1,17 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Routes, Route } from "react-router-dom";
-import StickyContactBar from "./components/StickyContactBar";
+import { Routes, Route, useLocation } from "react-router-dom";
+
 import "./styles/globals.css";
 
-import Navbar  from "./components/Navbar";
-import Footer  from "./components/Footer";
-import WAFloat from "./components/WAFloat";
+import Navbar           from "./components/Navbar";
+import Footer           from "./components/Footer";
+import WAFloat          from "./components/WAFloat";
+import StickyContactBar from "./components/StickyContactBar";
+import Preloader        from "./components/Preloader";
+import CursorFX         from "./components/CursorFX";
+import Ambient          from "./components/Ambient";
+
+import { useSmoothScroll } from "./lib/motion";
 
 import HomePage             from "./pages/HomePage";
 import ServicesPage         from "./pages/ServicesPage";
@@ -17,19 +22,23 @@ import FinalYearProjectPage from "./pages/FinalYearProjectPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return null;
 }
 
 export default function App() {
+  useSmoothScroll();
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <Preloader />
+      <Ambient />
+      <CursorFX />
+
       <ScrollToTop />
       <Navbar />
 
-      <main style={{ flex: 1 }}>
+      <main style={{ flex: 1, position: "relative", zIndex: 2 }}>
         <Routes>
           <Route path="/"                   element={<HomePage />} />
           <Route path="/services"           element={<ServicesPage />} />
